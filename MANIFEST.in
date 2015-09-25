@@ -1,0 +1,2 @@
+recursive-include urth_cms_js *.js *.css
+include VERSION

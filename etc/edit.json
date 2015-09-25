@@ -1,0 +1,5 @@
+{
+  "load_extensions": {
+    "urth_cms_js/editor/main": true
+  }
+}

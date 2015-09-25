@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) Jupyter Development Team.
+ * Distributed under the terms of the Modified BSD License.
+ */
+
+.urth-search-input {
+    width: 100%;
+}
+
+.urth-search-input-help {
+    text-align: right;
+    font-size: 0.8em;
+}
+
+.urth-search-summary {
+    margin-top: 1em;   
+}
+
+.urth-search-results {
+    margin-top: 0.5em;
+    max-height: calc(100vh - 300px);
+    overflow-y: auto;
+}
+
+.urth-search-result-row {
+    margin-top: 1.5em;
+}
+
+.urth-search-result-actions {
+    font-size: 0.9em;
+    color: #777;
+}
+
+.urth-search-result-actions a {
+    opacity: 0.7;
+}
+
+.urth-search-result-actions a:hover {
+    opacity: 1;
+}
+
+.urth-search-result-location {
+    margin-left: 1em;
+}

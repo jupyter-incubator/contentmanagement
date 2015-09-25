@@ -1,0 +1,11 @@
+/*
+ * Copyright (c) Jupyter Development Team.
+ * Distributed under the terms of the Modified BSD License.
+ */
+.urth-notice {
+    position: absolute;
+    top: 4px;
+    width: 50%;
+    left: 25%;
+    z-index: 1040;
+}
