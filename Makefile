@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-.PHONY: clean dev help sdist test install
+.PHONY: build clean dev help install sdist test install
 
 TAG?=cms-dev
 
@@ -48,21 +48,23 @@ install:
 			$(CMD)'
 
 sdist: REPO?=jupyter/pyspark-notebook:$(TAG)
-sdist: RELEASE?=
-sdist: BUILD_NUMBER?=0
-sdist: GIT_COMMIT?=HEAD
 sdist:
 	@docker run -it --rm \
 		-v `pwd`:/src \
 		$(REPO) bash -c 'cp -r /src /tmp/src && \
 			cd /tmp/src && \
-			echo "$(BUILD_NUMBER)-$(GIT_COMMIT)" > VERSION && \
-			python setup.py sdist && \
+			python setup.py sdist $(POST_SDIST) && \
 			cp -r dist /src'
 
 test: REPO?=jupyter/pyspark-notebook:$(TAG)
 test: CMD?=bash -c 'cd /src; python3 -B -m unittest discover -s test'
 test:
-	@docker run -it --rm \
-		-v `pwd`:/src \
-		$(REPO) $(CMD)
+	@echo No tests yet ...	
+# @docker run -it --rm \
+# 	-v `pwd`:/src \
+# 	$(REPO) $(CMD)
+
+
+
+release: POST_SDIST=register upload
+release: sdist
