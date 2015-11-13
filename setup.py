@@ -48,6 +48,7 @@ setup(
     author='Jupyter Development Team',
     author_email='jupyter@googlegroups.com',
     description='IPython / Jupyter extensions for advanced content management',
+    url='https://github.com/jupyter-incubator/contentmanagement',
     version=VERSION_NS['__version__'],
     license='BSD',
     platforms=['IPython Notebook 3.x'],

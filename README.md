@@ -17,7 +17,6 @@ Watch the first 15-20 minutes of the [September 1st Jupyter meeting video record
 
 * Tests (they exist, just not ported to the open source yet)
 * User docs
-* Full page drag/drop on all screens
 * Snippets in search hits (requires Whoosh unicode fixes for Python3)
 
 ## Runtime Requirements
@@ -31,6 +30,10 @@ These requirements are satisfied automatically when you follow the setup instruc
 # Try It
 
 We're running a tmpnb instance at http://jupyter.cloudet.xyz with a snapshot of this project (and other related incubator projects) pre-installed.
+
+# Install It
+
+`pip install jupyter_cms` and then restart your notebook server
 
 # Develop
 
