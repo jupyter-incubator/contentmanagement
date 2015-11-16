@@ -4,11 +4,11 @@
 Extended from http://nbviewer.ipython.org/github/ipython/ipython/blob/master/examples/notebooks/Importing%20Notebooks.ipynb.
 '''
 import io, os, sys, types, re, warnings, hashlib
-import IPython.nbformat as nbformat
-from IPython.nbformat import v4 as nb_v4
-from IPython.nbformat import reader, converter
-from IPython.nbconvert import export_html
-from IPython.config import Config
+import nbformat
+from nbformat import v4 as nb_v4
+from nbformat import reader, converter
+from nbconvert import export_html
+from traitlets.config import Config
 from IPython.display import display, HTML
 from IPython.core.interactiveshell import InteractiveShell
 

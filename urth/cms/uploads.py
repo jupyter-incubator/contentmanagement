@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-from IPython.html.utils import url_path_join, url_unescape
-from IPython.html.base.handlers import IPythonHandler, path_regex
+from notebook.utils import url_path_join, url_unescape
+from notebook.base.handlers import IPythonHandler, path_regex
 from tornado import web
 import os
 

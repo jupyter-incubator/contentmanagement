@@ -3,7 +3,8 @@
 
 .PHONY: build clean dev help install sdist test install
 
-TAG?=cms-dev
+REPO:=jupyter/pyspark-notebook:a388c4a66fd4
+CMS_REPO:=jupyter/pyspark-notebook-cms:a388c4a66fd4
 
 help:
 	@echo 'Host commands:'
@@ -14,8 +15,13 @@ help:
 	@echo '     sdist - build a source distribution into dist/'
 	@echo '      test - run unit tests within a container'
 
+
 build:
-	@docker build --rm -t jupyter/pyspark-notebook:$(TAG) .
+	@-docker rm -f cms-build
+	@docker run -it --name cms-build \
+		$(REPO) bash -c 'pip install whoosh scandir'
+	@docker commit cms-build $(CMS_REPO)
+	@-docker rm -f cms-build
 
 clean:
 	@-rm -rf dist
@@ -23,28 +29,27 @@ clean:
 	@-rm -rf __pycache__ */__pycache__ */*/__pycache__
 	@-find . -name '*.pyc' -exec rm -fv {} \;
 
-dev: NB_HOME?=/home/jovyan
-dev: REPO?=jupyter/pyspark-notebook:$(TAG)
-dev: CMD?=sh -c "ipython notebook --no-browser --port 8888 --ip='*'"
+dev: NB_HOME?=/root
+dev: CMD?=sh -c "jupyter notebook --no-browser --port 8888 --ip='*'"
 dev: AUTORELOAD?=no
 dev:
 	@docker run -it --rm \
 		-p 9500:8888 \
 		-e AUTORELOAD=$(AUTORELOAD) \
-		-v `pwd`/urth_cms_js:$(NB_HOME)/.ipython/nbextensions/urth_cms_js \
-		-v `pwd`/etc:$(NB_HOME)/.ipython/profile_default/nbconfig \
+		-v `pwd`/urth_cms_js:$(NB_HOME)/.local/share/jupyter/nbextensions/urth_cms_js \
 		-v `pwd`/urth:/opt/conda/lib/python3.4/site-packages/urth \
-		-v `pwd`/etc/ipython_notebook_config.py:$(NB_HOME)/.ipython/profile_default/ipython_notebook_config.py \
-		-v `pwd`/etc/notebooks:$(NB_HOME)/work \
-		$(REPO) $(CMD)
+		-v `pwd`/etc/jupyter_notebook_config.py:$(NB_HOME)/.jupyter/jupyter_notebook_config.py \
+		-v `pwd`/etc/notebook.json:$(NB_HOME)/.jupyter/nbconfig/notebook.json \
+		-v `pwd`/etc/notebooks:/home/jovyan/work \
+		$(CMS_REPO) $(CMD)
 
-install: REPO?=jupyter/pyspark-notebook:$(TAG)
 install: CMD?=exit
 install:
 	@docker run -it --rm \
+		--user jovyan \
 		-v `pwd`:/src \
 		$(REPO) bash -c 'cd /src/dist && \
-			pip install $$(ls -1 *.tar.gz | tail -n 1) && \
+			pip install --no-binary :all: $$(ls -1 *.tar.gz | tail -n 1) && \
 			$(CMD)'
 
 sdist: REPO?=jupyter/pyspark-notebook:$(TAG)
@@ -56,15 +61,12 @@ sdist:
 			python setup.py sdist $(POST_SDIST) && \
 			cp -r dist /src'
 
-test: REPO?=jupyter/pyspark-notebook:$(TAG)
 test: CMD?=bash -c 'cd /src; python3 -B -m unittest discover -s test'
 test:
 	@echo No tests yet ...	
 # @docker run -it --rm \
 # 	-v `pwd`:/src \
-# 	$(REPO) $(CMD)
-
-
+# 	$(CMS_REPO) $(CMD)
 
 release: POST_SDIST=register upload
 release: sdist
