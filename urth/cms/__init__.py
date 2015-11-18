@@ -4,8 +4,7 @@ from .inject import InjectMagic
 from . import search
 from . import uploads
 from . import loader
-from IPython.utils.path import locate_profile
-from IPython.html.services.config import ConfigManager
+from jupyter_core.paths import jupyter_runtime_dir
 import os
 import json
 import scandir
@@ -13,7 +12,7 @@ import scandir
 def load_ipython_extension(ipython):
     # use the configured working directory if we can find it
     work_dir = None
-    for filename in scandir.scandir(os.path.join(locate_profile(), 'security')):
+    for filename in scandir.scandir(jupyter_runtime_dir()):
         if filename.name.startswith('nbserver-') and filename.name.endswith('.json'):
             with open(filename.path, 'r') as fh:
                 nbserver = json.load(fh)

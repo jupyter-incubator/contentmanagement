@@ -1,11 +1,11 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-from IPython.utils.path import locate_profile
+from jupyter_core.paths import jupyter_data_dir
 from whoosh.index import create_in, open_dir, exists_in, LockError
 from whoosh.fields import Schema, TEXT, ID, STORED
 from whoosh.query import AndMaybe, Term
 from whoosh.qparser import MultifieldParser
-import IPython.nbformat as nbformat
+import nbformat
 import io
 import os
 import json
@@ -18,7 +18,7 @@ class Index(object):
         self._init_index()
         
     def _init_index(self, reset=False):
-        index_path = os.path.join(locate_profile(), 'index')
+        index_path = os.path.join(jupyter_data_dir(), 'index')
         
         # clear out old index if requested
         if reset:

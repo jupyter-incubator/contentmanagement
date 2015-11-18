@@ -1,7 +1,6 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 from IPython.core.magic import Magics, magics_class, line_magic
-from IPython import get_ipython
 from IPython.display import display, Javascript
 import json
 
