@@ -21,7 +21,7 @@ Watch the first 15-20 minutes of the [September 1st Jupyter meeting video record
 
 ## Runtime Requirements
 
-* IPython Notebook 3.2.x (Jupyter Notebook 4.x not yet supported), running on Python 3.x
+* Jupyter Notebook 4.x running on Python 3.x
 * [scandir](https://github.com/benhoyt/scandir) and [whoosh](http://whoosh.readthedocs.org/en/latest/)
 * Notebook instance running out of `profile_default`
 
@@ -58,12 +58,6 @@ docker-machine create -d virtualbox dev
 
 # point Docker client to virtual machine
 eval "$(docker-machine env dev)"
-```
-
-Pull the Docker image to use for development.
-
-```
-docker pull jupyter/pyspark-notebook:3.2
 ```
 
 Clone this repository into a local directory that Docker can volume mount.
