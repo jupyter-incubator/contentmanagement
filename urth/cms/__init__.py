@@ -8,7 +8,13 @@ from IPython.utils.path import locate_profile
 from IPython.html.services.config import ConfigManager
 import os
 import json
-import scandir
+
+# Use the built-in version of scandir if possible, otherwise
+# use the scandir module version
+try:
+    from os import scandir
+except ImportError:
+    from scandir import scandir
 
 def load_ipython_extension(ipython):
     # use the configured working directory if we can find it

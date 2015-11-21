@@ -43,6 +43,17 @@ class InstallCommand(install):
                 fh.write('\n')
                 fh.write(SERVER_EXT_CONFIG)
 
+install_requires=[
+    'whoosh>=2.7.0, <3.0',
+]
+
+# Use the built-in version of scandir if possible, 
+# otherwise require the scandir module
+try:
+    from os import scandir
+except ImportError:
+    install_requires.append('scandir>=1.1, <2.0')
+
 setup(
     name='jupyter_cms',
     author='Jupyter Development Team',
@@ -56,10 +67,7 @@ setup(
         'urth', 
         'urth.cms'
     ],
-    install_requires=[
-        'whoosh', 
-        'scandir'
-    ],
+    install_requires=install_requires,
     cmdclass={
         'install': InstallCommand
     }
