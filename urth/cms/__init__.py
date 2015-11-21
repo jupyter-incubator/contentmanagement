@@ -7,12 +7,18 @@ from . import loader
 from jupyter_core.paths import jupyter_runtime_dir
 import os
 import json
-import scandir
+
+# Use the built-in version of scandir if possible, otherwise
+# use the scandir module version
+try:
+    from os import scandir
+except ImportError:
+    from scandir import scandir
 
 def load_ipython_extension(ipython):
     # use the configured working directory if we can find it
     work_dir = None
-    for filename in scandir.scandir(jupyter_runtime_dir()):
+    for filename in scandir(jupyter_runtime_dir()):
         if filename.name.startswith('nbserver-') and filename.name.endswith('.json'):
             with open(filename.path, 'r') as fh:
                 nbserver = json.load(fh)
