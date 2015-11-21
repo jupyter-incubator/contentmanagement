@@ -10,7 +10,13 @@ import io
 import os
 import json
 import shutil
-import scandir
+
+# Use the built-in version of scandir if possible, otherwise
+# use the scandir module version
+try:
+    from os import scandir
+except ImportError:
+    from scandir import scandir
 
 class Index(object):
     def __init__(self, work_dir):
@@ -63,7 +69,7 @@ class Index(object):
         )
     
     def _scan_disk(self, on_disk, path):
-        for entry in scandir.scandir(path):
+        for entry in scandir(path):
             if not entry.name.startswith('.') and entry.is_dir():
                 self._scan_disk(on_disk, entry.path)
             elif entry.is_file():
