@@ -1,0 +1,19 @@
+sudo: required
+
+language: python
+
+python:
+- 3.4
+
+services:
+- docker
+
+script:
+- make sdist
+- make install
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
+  slack: cloudet:rMfRKhvsbZuCIRZpTct3kBI4
