@@ -5,6 +5,7 @@ python:
     - 3.4
     - 3.5
 script:
+    - pip install notebook
     - python setup.py sdist
     - pip install --no-use-wheel dist/*.tar.gz
 
