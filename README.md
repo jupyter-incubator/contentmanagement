@@ -21,7 +21,7 @@ Watch the first 15-20 minutes of the [September 1st Jupyter meeting video record
 
 ## Runtime Requirements
 
-* IPython Notebook 3.2.x (Jupyter Notebook 4.x not yet supported), running on Python 3.x
+* IPython Notebook 3.2.x (Jupyter Notebook 4.x not yet supported), running on Python 2.7 or Python 3.x
 * [scandir](https://github.com/benhoyt/scandir) and [whoosh](http://whoosh.readthedocs.org/en/latest/)
 * Notebook instance running out of `profile_default`
 
