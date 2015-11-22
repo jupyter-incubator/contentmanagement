@@ -23,7 +23,6 @@ Watch the first 15-20 minutes of the [September 1st Jupyter meeting video record
 
 * Jupyter Notebook 4.x running on Python 3.x
 * [scandir](https://github.com/benhoyt/scandir) and [whoosh](http://whoosh.readthedocs.org/en/latest/)
-* Notebook instance running out of `profile_default`
 
 These requirements are satisfied automatically when you follow the setup instructions below.
 
