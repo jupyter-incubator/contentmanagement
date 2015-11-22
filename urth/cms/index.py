@@ -50,14 +50,14 @@ class Index(object):
         self.query_parser = MultifieldParser(["content", "basename", "dirname"], self.ix.schema)
     
     def _file_to_document(self, filename, m_time):
-        content = ''
+        content = u''
         
         # get content for notebooks only
         if filename.endswith('.ipynb'):
             with io.open(filename, 'r', encoding='utf-8') as f:
                 try:
                     notebook = nbformat.read(f, 4)
-                    content = '\n'.join(cell.get('source', '') for cell in notebook['cells'])
+                    content = u'\n'.join(cell.get('source', u'') for cell in notebook['cells'])
                 except (Exception):
                     pass
         return dict(
