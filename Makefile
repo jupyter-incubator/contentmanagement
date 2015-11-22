@@ -40,6 +40,8 @@ dev:
 		-v `pwd`/urth:/opt/conda/lib/python3.4/site-packages/urth \
 		-v `pwd`/etc/jupyter_notebook_config.py:$(NB_HOME)/.jupyter/jupyter_notebook_config.py \
 		-v `pwd`/etc/notebook.json:$(NB_HOME)/.jupyter/nbconfig/notebook.json \
+		-v `pwd`/etc/tree.json:$(NB_HOME)/.jupyter/nbconfig/tree.json \
+		-v `pwd`/etc/edit.json:$(NB_HOME)/.jupyter/nbconfig/edit.json \
 		-v `pwd`/etc/notebooks:/home/jovyan/work \
 		$(CMS_REPO) $(CMD)
 
