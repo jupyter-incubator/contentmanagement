@@ -2,6 +2,7 @@
 
 ## 0.2.1 (2015-11-22)
 
+* Use standard lib scandir if present (Python 3.5)
 * Fix regression of search feature on file tree and editor screens
 * Make compatible with Python 2.7 as well as 3.3+
 * Keep compatible with Jupyter Notebook 4.0.x
