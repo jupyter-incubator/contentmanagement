@@ -7,7 +7,8 @@ define([
     'base/js/utils',
     '../common/dnd_upload',
     './toc',
-    './search'
+    './search',
+    './bundle'
 ], function(IPython, utils, upload) {
     return {
         load_ipython_extension: function() {
