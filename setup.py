@@ -59,11 +59,22 @@ setup(
     name='jupyter_cms',
     author='Jupyter Development Team',
     author_email='jupyter@googlegroups.com',
-    description='Jupyter Notebook extension for experimental content management features',
+    description='Extension for Jupyter Notebook 4.0.x with experimental content management features',
+    long_description = '''
+    This package adds the following features to Jupyter Notebook:
+
+* Search dialog on file tree, editor, and notebook screens to search over filenames and .ipynb content in the notebook directory
+* IPython kernel extension to make notebooks importable, and notebook cells injectable via # <api> and # <help> annotations
+* Full-page drag-and-drop upload target
+* Pop-over table of contents navigation for notebooks
+
+See `the project README <https://github.com/jupyter-incubator/contentmanagement>`_
+for more information. 
+''',   
     url='https://github.com/jupyter-incubator/contentmanagement',
     version=VERSION_NS['__version__'],
     license='BSD',
-    platforms=['Jupyter Notebook 4.x'],
+    platforms=['Jupyter Notebook 4.0.x'],
     packages=[
         'urth', 
         'urth.cms'
@@ -71,5 +82,16 @@ setup(
     install_requires=install_requires,
     cmdclass={
         'install': InstallCommand
-    }
+    },
+    classifiers=[
+        'Intended Audience :: Developers',
+        'Intended Audience :: System Administrators',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: BSD License',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5'
+    ]
 )
