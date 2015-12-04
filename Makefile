@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-.PHONY: build clean dev help install sdist test install
+.PHONY: build clean configs dev help install sdist test install
 
 PYTHON?=python3
 
@@ -33,6 +33,11 @@ clean:
 	@-rm -rf __pycache__ */__pycache__ */*/__pycache__
 	@-find . -name '*.pyc' -exec rm -fv {} \;
 
+configs:
+# Make copies of select git controlled files so that we don't edit them while
+# volume mounted at runtime.
+	@cp etc/notebook.default.json etc/notebook.json
+
 dev: dev-$(PYTHON)
 
 dev-python2: SETUP_CMD?=$(PYTHON2_SETUP)
@@ -45,7 +50,7 @@ dev-python3: _dev
 _dev: NB_HOME?=/root
 _dev: CMD?=sh -c "python --version; jupyter notebook --no-browser --port 8888 --ip='*'"
 _dev: AUTORELOAD?=no
-_dev:
+_dev: configs
 	@docker run -it --rm \
 		-p 9500:8888 \
 		-e AUTORELOAD=$(AUTORELOAD) \
