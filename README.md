@@ -12,6 +12,7 @@ The content management extensions provide the following:
 * IPython kernel extension to make notebooks importable, and notebook cells injectable via `# <api>` and `# <help>` annotations (see included example notebooks)
 * Full-page drag-and-drop upload target
 * Pop-over table of contents navigation for notebooks
+* Plugin system for deploying and downloading notebook bundles (see *Writing Bundlers*)
 
 Watch the first 15-20 minutes of the [September 1st Jupyter meeting video recording](https://www.youtube.com/watch?v=SJiezXPhVv8) for demonstrations of each content management feature.
 
@@ -35,6 +36,41 @@ If you want to try the extension and demos without installing it yourself, visit
 # Install It
 
 `pip install jupyter_cms` and then restart your Notebook server if it was running during the install.
+
+# Writing Bundlers
+
+This extension supports the writing of *bundlers*, Python modules that take a notebook, transform it, package the result, and either deploy it or download it. Bundlers must register themselves (e.g., at install time) using code like the following:
+
+```python
+from notebook.services.config import ConfigManager
+
+cm = ConfigManager()
+
+cm.update('notebook', { 
+  'jupyter_cms_bundlers': {
+    'my_bundle_id': {
+      'label': 'My menu item label',
+      'module_name': 'some.installed.python.package',
+      'group': 'deploy' # or 'download'
+    }
+  }
+})
+```
+
+At runtime, a menu item with the given label appears either in the *File &rarr; Deploy as* or *File &rarr; Download as* menu depending on the `group` value. When a user clicks the menu item, a new browser tab opens and contacts the `/bundler` handler in this extension. The handler triggers imports `some.installed.python.package` and invokes its `bundle` function. The function must have the following definition:
+
+```python
+def bundle(handler, absolute_notebook_path):
+  '''
+  Transforms, converts, bundles, etc. the notebook. Then issues a Tornado web 
+  response using the handler to redirect the browser, download a file, show
+  an HTML page, etc.
+
+  :param handler: The tornado web handler that serviced the request
+  :param absolute_notebook_path: The path of the notebook on disk
+  '''
+  pass
+```
 
 # Develop
 
