@@ -44,9 +44,8 @@ class BundlerHandler(IPythonHandler):
         except ImportError:
             raise web.HTTPError(500, 'Could not import bundler %s ' % bundler_id)
 
-        # Let the bundler respond in any way it sees fit and then finish the response
+        # Let the bundler respond in any way it sees fit
         bundler_mod.bundle(self, abs_nb_path)
-        self.finish()
 
 def load_jupyter_server_extension(nb_app):
     web_app = nb_app.web_app
