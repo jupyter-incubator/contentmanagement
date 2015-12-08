@@ -4,7 +4,7 @@ from notebook.utils import url_path_join, url2path
 from notebook.base.handlers import IPythonHandler
 from notebook.services.config import ConfigManager
 from ipython_genutils.importstring import import_item
-from tornado import web
+from tornado import web, gen
 import os
 
 class BundlerHandler(IPythonHandler):
@@ -25,6 +25,7 @@ class BundlerHandler(IPythonHandler):
         return cm.get('notebook').get('jupyter_cms_bundlers', {})[bundler_id]
 
     @web.authenticated
+    @gen.coroutine
     def get(self, bundler_id):
         '''
         Executes the requested bundler on the given notebook.
@@ -44,8 +45,9 @@ class BundlerHandler(IPythonHandler):
         except ImportError:
             raise web.HTTPError(500, 'Could not import bundler %s ' % bundler_id)
 
-        # Let the bundler respond in any way it sees fit
-        bundler_mod.bundle(self, abs_nb_path)
+        # Let the bundler respond in any way it sees fit and assume it will
+        # finish the request
+        yield gen.maybe_future(bundler_mod.bundle(self, abs_nb_path))
 
 def load_jupyter_server_extension(nb_app):
     web_app = nb_app.web_app
