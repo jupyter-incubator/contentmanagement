@@ -51,7 +51,7 @@ def load_jupyter_server_extension(nb_app):
     web_app = nb_app.web_app
     host_pattern = '.*$'
     bundler_id_regex = r'(?P<bundler_id>[A-Za-z0-9_]+)'
-    route_url = url_path_join(web_app.settings['base_url'], '/bundlers/%s' % bundler_id_regex)
+    route_url = url_path_join(web_app.settings['base_url'], '/api/bundlers/%s' % bundler_id_regex)
     web_app.add_handlers(host_pattern, [
         (route_url, BundlerHandler, {'notebook_dir': nb_app.notebook_dir}),
     ])

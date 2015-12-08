@@ -21,7 +21,7 @@ define([
             location.protocol + '//' +
             location.host +
             base_url +
-            'bundlers/' + encodeURIComponent(bundler_id) +
+            'api/bundlers/' + encodeURIComponent(bundler_id) +
             '?notebook=' + encodeURIComponent(path)
         );
 
