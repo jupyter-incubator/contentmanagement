@@ -39,7 +39,7 @@ If you want to try the extension and demos without installing it yourself, visit
 
 # Writing Bundlers
 
-This extension supports the writing of *bundlers*, Python modules that take a notebook, transform it, package the result, and either deploy it or download it. Bundlers must register themselves (e.g., at install time) using code like the following:
+This extension supports the writing of *bundlers*, Python modules that may take a notebook, transform it (e.g,. using nbconvert), package the result, and either deploy it or download it. Bundlers should register themselves at install time using code like the following:
 
 ```python
 from notebook.services.config import ConfigManager
@@ -57,19 +57,34 @@ cm.update('notebook', {
 })
 ```
 
-At runtime, a menu item with the given label appears either in the *File &rarr; Deploy as* or *File &rarr; Download as* menu depending on the `group` value. When a user clicks the menu item, a new browser tab opens and contacts the `/bundler` handler in this extension. The handler triggers imports `some.installed.python.package` and invokes its `bundle` function. The function must have the following definition:
+At runtime, a menu item with the given label appears either in the *File &rarr; Deploy as* or *File &rarr; Download as* menu depending on the `group` value. When a user clicks the menu item, a new browser tab opens and contacts the `/api/bundler` handler in this extension. The handler imports `some.installed.python.package` and invokes its `bundle` function. The function must have the following definition:
 
 ```python
 def bundle(handler, absolute_notebook_path):
   '''
   Transforms, converts, bundles, etc. the notebook. Then issues a Tornado web 
   response using the handler to redirect the browser, download a file, show
-  an HTML page, etc.
+  an HTML page, etc. This function must finish the handler response before
+  returning either explicitly or by raising an exception.
 
   :param handler: The tornado web handler that serviced the request
   :param absolute_notebook_path: The path of the notebook on disk
   '''
-  pass
+  self.finish('Hello world!'')
+```
+
+The caller is a `@tornado.gen.coroutine` decorated function. It wraps the call to `bundle` with `torando.gen.maybe_future`. This behavior means `bundle` may be decorated with `@tornado.gen.coroutine` as well and `yield` to avoid blocking the Notebook server main loop like so:
+
+```python
+from tornado import gen
+
+@gen.coroutine
+def bundle(handler, absolute_notebook_path):
+  # simulate a long running IO op (e.g., deploying to a remote host)
+  yield gen.sleep(10)
+
+  # now respond
+  self.finish('I slept for 10 seconds!')
 ```
 
 # Develop
