@@ -6,8 +6,8 @@
 PYTHON?=python3
 
 REPO:=jupyter/pyspark-notebook:a388c4a66fd4
-CMS_REPO:=jupyter/pyspark-notebook-cms:a388c4a66fd4
-PYTHON2_SETUP:=source activate python2;
+DEV_REPO:=jupyter/pyspark-notebook-cms:a388c4a66fd4
+PYTHON2_SETUP:=source activate python2
 
 help:
 	@echo 'Host commands:'
@@ -24,7 +24,7 @@ build:
 		$(REPO) bash -c 'pip install whoosh scandir; \
 			$(PYTHON2_SETUP); \
 			pip install whoosh scandir'
-	@docker commit cms-build $(CMS_REPO)
+	@docker commit cms-build $(DEV_REPO)
 	@-docker rm -f cms-build
 
 clean:
@@ -40,7 +40,7 @@ configs:
 
 dev: dev-$(PYTHON)
 
-dev-python2: SETUP_CMD?=$(PYTHON2_SETUP)
+dev-python2: SETUP_CMD?=$(PYTHON2_SETUP);
 dev-python2: EXTENSION_DIR=/opt/conda/envs/python2/lib/python2.7/site-packages/urth
 dev-python2: _dev
 
@@ -61,7 +61,7 @@ _dev: configs
 		-v `pwd`/etc/tree.json:$(NB_HOME)/.jupyter/nbconfig/tree.json \
 		-v `pwd`/etc/edit.json:$(NB_HOME)/.jupyter/nbconfig/edit.json \
 		-v `pwd`/etc/notebooks:/home/jovyan/work \
-		$(CMS_REPO) bash -c '$(SETUP_CMD) $(CMD)'
+		$(DEV_REPO) bash -c '$(SETUP_CMD) $(CMD)'
 
 install: CMD?=exit
 install:
@@ -81,12 +81,19 @@ sdist:
 			python setup.py sdist $(POST_SDIST) && \
 			cp -r dist /src'
 
-test: CMD?=bash -c 'cd /src; python3 -B -m unittest discover -s test'
-test:
-	@echo No tests yet ...	
-# @docker run -it --rm \
-# 	-v `pwd`:/src \
-# 	$(CMS_REPO) $(CMD)
+test: test-$(PYTHON)
+
+test-python2: SETUP_CMD?=$(PYTHON2_SETUP);
+test-python2: _test
+
+test-python3: _test
+
+_test: CMD?=cd /src; python --version; python -B -m unittest discover -s test
+_test:
+# Need to use two commands here to allow for activation of multiple python versions
+	@docker run -it --rm \
+		-v `pwd`:/src \
+		$(DEV_REPO) bash -c '$(SETUP_CMD) $(CMD)'
 
 release: POST_SDIST=register upload
 release: sdist
