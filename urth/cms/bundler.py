@@ -14,41 +14,41 @@ from tornado import web, gen
 
 class BundlerTools(object):
     '''Set of common tools to aid bundler implementations.'''
-    def get_referenced_files(self, abs_nb_path, version):
+    def get_file_references(self, abs_nb_path, version):
         '''
         Gets a list of files referenced either in Markdown fenced code blocks
-        or in HTML comments from the notebook. Expands wildcards and handles
-        negations in the same manner as .gitignore. Returns the fullly expanded
-        list of files referenced.
+        or in HTML comments from the notebook. Expands patterns expressed in 
+        gitignore syntax (https://git-scm.com/docs/gitignore). Returns the 
+        fully expanded list of filenames relative to the notebook dirname.
 
         NOTE: Temporarily changes the current working directory when called.
 
         :param abs_nb_path: Absolute path of the notebook on disk
         :param version: Version of the notebook document format to use
-        :returns: List of strings
+        :returns: List of filename strings relative to the notebook path
         '''
-        raw_refs = self.get_references(abs_nb_path, version)
-        expanded = self._expand_references(os.path.dirname(abs_nb_path), raw_refs)
+        ref_patterns = self.get_reference_patterns(abs_nb_path, version)
+        expanded = self.expand_references(os.path.dirname(abs_nb_path), ref_patterns)
         return expanded
 
-    def get_references(self, abs_nb_path, version):
+    def get_reference_patterns(self, abs_nb_path, version):
         '''
         Gets a list of reference patterns either in Markdown fenced code blocks
         or in HTML comments from the notebook.
 
         :param abs_nb_path: Absolute path of the notebook on disk
         :param version: Version of the notebook document format to use
-        :returns: List of strings
+        :returns: List of pattern strings from the notebook
         '''
         notebook = nbformat.read(abs_nb_path, version)
         referenced_list = []
         for cell in notebook.cells:
-            references = self._get_cell_references(cell)
+            references = self.get_cell_reference_patterns(cell)
             if references:
                 referenced_list = referenced_list + references
         return referenced_list
 
-    def _get_cell_references(self, cell):
+    def get_cell_reference_patterns(self, cell):
         '''
         Retrieves the list of references from a single notebook cell. Looks for
         fenced code blocks or HTML comments in Markdown cells, e.g.,
@@ -97,14 +97,16 @@ class BundlerTools(object):
         # Clean out blank references
         return [ref for ref in referenced if ref.strip()]
 
-    def _expand_references(self, root_path, references):
+    def expand_references(self, root_path, references):
         '''
         Expands a set of reference patterns by evaluating them against the
-        given root directory.
+        given root directory. Expansions are performed against patterns 
+        expressed in the same manner as in gitignore 
+        (https://git-scm.com/docs/gitignore).
 
         :param root_path: Assumed root directory for the patterns
         :param references: List of reference patterns
-        :returns: List of string filenames
+        :returns: List of filename strings relative to the root path
         '''
         globbed = []
         negations = []
