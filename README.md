@@ -67,13 +67,13 @@ def bundle(handler, absolute_notebook_path):
   an HTML page, etc. This function must finish the handler response before
   returning either explicitly or by raising an exception.
 
-  :param handler: The tornado web handler that serviced the request
+  :param handler: The tornado.web.RequestHandler that serviced the request
   :param absolute_notebook_path: The path of the notebook on disk
   '''
-  self.finish('Hello world!'')
+  handler.finish('Hello world!'')
 ```
 
-The caller is a `@tornado.gen.coroutine` decorated function. It wraps the call to `bundle` with `torando.gen.maybe_future`. This behavior means `bundle` may be decorated with `@tornado.gen.coroutine` as well and `yield` to avoid blocking the Notebook server main loop like so:
+The caller of the `bundle` function is a `@tornado.gen.coroutine` decorated function. It wraps its call to `bundle` with `torando.gen.maybe_future`. This behavior means `bundle` may be decorated with `@tornado.gen.coroutine`  and `yield` to avoid blocking the Notebook server main loop during long-running asynchronous operations like so:
 
 ```python
 from tornado import gen
@@ -84,8 +84,13 @@ def bundle(handler, absolute_notebook_path):
   yield gen.sleep(10)
 
   # now respond
-  self.finish('I slept for 10 seconds!')
+  handler.finish('I slept for 10 seconds!')
 ```
+
+The `handler` passed to bundler is a regular `tornado.web.RequestHandler` instance with two additional properties.
+
+1. `notebook_dir` - The root notebook directory configured for the Jupyter Notebook server
+2. `tools` - An instance of [BundlerTools](https://github.com/jupyter-incubator/contentmanagement/blob/master/urth/cms/bundler.py#L15), set of common convenience functions that may be useful to bundlers
 
 # Develop
 
