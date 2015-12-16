@@ -1,13 +1,13 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-.PHONY: build clean dev help install sdist test install
+.PHONY: build clean configs dev help install sdist test install
 
 PYTHON?=python3
 
 REPO:=jupyter/pyspark-notebook:a388c4a66fd4
-CMS_REPO:=jupyter/pyspark-notebook-cms:a388c4a66fd4
-PYTHON2_SETUP:=source activate python2;
+DEV_REPO:=jupyter/pyspark-notebook-cms:a388c4a66fd4
+PYTHON2_SETUP:=source activate python2
 
 help:
 	@echo 'Host commands:'
@@ -24,7 +24,7 @@ build:
 		$(REPO) bash -c 'pip install whoosh scandir; \
 			$(PYTHON2_SETUP); \
 			pip install whoosh scandir'
-	@docker commit cms-build $(CMS_REPO)
+	@docker commit cms-build $(DEV_REPO)
 	@-docker rm -f cms-build
 
 clean:
@@ -33,9 +33,14 @@ clean:
 	@-rm -rf __pycache__ */__pycache__ */*/__pycache__
 	@-find . -name '*.pyc' -exec rm -fv {} \;
 
+configs:
+# Make copies of select git controlled files so that we don't edit them while
+# volume mounted at runtime.
+	@cp etc/notebook.default.json etc/notebook.json
+
 dev: dev-$(PYTHON)
 
-dev-python2: SETUP_CMD?=$(PYTHON2_SETUP)
+dev-python2: SETUP_CMD?=$(PYTHON2_SETUP);
 dev-python2: EXTENSION_DIR=/opt/conda/envs/python2/lib/python2.7/site-packages/urth
 dev-python2: _dev
 
@@ -45,7 +50,7 @@ dev-python3: _dev
 _dev: NB_HOME?=/root
 _dev: CMD?=sh -c "python --version; jupyter notebook --no-browser --port 8888 --ip='*'"
 _dev: AUTORELOAD?=no
-_dev:
+_dev: configs
 	@docker run -it --rm \
 		-p 9500:8888 \
 		-e AUTORELOAD=$(AUTORELOAD) \
@@ -56,7 +61,7 @@ _dev:
 		-v `pwd`/etc/tree.json:$(NB_HOME)/.jupyter/nbconfig/tree.json \
 		-v `pwd`/etc/edit.json:$(NB_HOME)/.jupyter/nbconfig/edit.json \
 		-v `pwd`/etc/notebooks:/home/jovyan/work \
-		$(CMS_REPO) bash -c '$(SETUP_CMD) $(CMD)'
+		$(DEV_REPO) bash -c '$(SETUP_CMD) $(CMD)'
 
 install: CMD?=exit
 install:
@@ -76,12 +81,19 @@ sdist:
 			python setup.py sdist $(POST_SDIST) && \
 			cp -r dist /src'
 
-test: CMD?=bash -c 'cd /src; python3 -B -m unittest discover -s test'
-test:
-	@echo No tests yet ...	
-# @docker run -it --rm \
-# 	-v `pwd`:/src \
-# 	$(CMS_REPO) $(CMD)
+test: test-$(PYTHON)
+
+test-python2: SETUP_CMD?=$(PYTHON2_SETUP);
+test-python2: _test
+
+test-python3: _test
+
+_test: CMD?=cd /src; python --version; python -B -m unittest discover -s test
+_test:
+# Need to use two commands here to allow for activation of multiple python versions
+	@docker run -it --rm \
+		-v `pwd`:/src \
+		$(DEV_REPO) bash -c '$(SETUP_CMD) $(CMD)'
 
 release: POST_SDIST=register upload
 release: sdist

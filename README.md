@@ -12,6 +12,7 @@ The content management extensions provide the following:
 * IPython kernel extension to make notebooks importable, and notebook cells injectable via `# <api>` and `# <help>` annotations (see included example notebooks)
 * Full-page drag-and-drop upload target
 * Pop-over table of contents navigation for notebooks
+* Plugin system for deploying and downloading notebook bundles (see *Writing Bundlers*)
 
 Watch the first 15-20 minutes of the [September 1st Jupyter meeting video recording](https://www.youtube.com/watch?v=SJiezXPhVv8) for demonstrations of each content management feature.
 
@@ -35,6 +36,61 @@ If you want to try the extension and demos without installing it yourself, visit
 # Install It
 
 `pip install jupyter_cms` and then restart your Notebook server if it was running during the install.
+
+# Writing Bundlers
+
+This extension supports the writing of *bundlers*, Python modules that may take a notebook, transform it (e.g,. using nbconvert), package the result, and either deploy it or download it. Bundlers should register themselves at install time using code like the following:
+
+```python
+from notebook.services.config import ConfigManager
+
+cm = ConfigManager()
+
+cm.update('notebook', { 
+  'jupyter_cms_bundlers': {
+    'my_bundle_id': {
+      'label': 'My menu item label',
+      'module_name': 'some.installed.python.package',
+      'group': 'deploy' # or 'download'
+    }
+  }
+})
+```
+
+At runtime, a menu item with the given label appears either in the *File &rarr; Deploy as* or *File &rarr; Download as* menu depending on the `group` value. When a user clicks the menu item, a new browser tab opens and contacts the `/api/bundler` handler in this extension. The handler imports `some.installed.python.package` and invokes its `bundle` function. The function must have the following definition:
+
+```python
+def bundle(handler, absolute_notebook_path):
+  '''
+  Transforms, converts, bundles, etc. the notebook. Then issues a Tornado web 
+  response using the handler to redirect the browser, download a file, show
+  an HTML page, etc. This function must finish the handler response before
+  returning either explicitly or by raising an exception.
+
+  :param handler: The tornado.web.RequestHandler that serviced the request
+  :param absolute_notebook_path: The path of the notebook on disk
+  '''
+  handler.finish('Hello world!'')
+```
+
+The caller of the `bundle` function is a `@tornado.gen.coroutine` decorated function. It wraps its call to `bundle` with `torando.gen.maybe_future`. This behavior means `bundle` may be decorated with `@tornado.gen.coroutine`  and `yield` to avoid blocking the Notebook server main loop during long-running asynchronous operations like so:
+
+```python
+from tornado import gen
+
+@gen.coroutine
+def bundle(handler, absolute_notebook_path):
+  # simulate a long running IO op (e.g., deploying to a remote host)
+  yield gen.sleep(10)
+
+  # now respond
+  handler.finish('I slept for 10 seconds!')
+```
+
+The `handler` passed to bundler is a regular `tornado.web.RequestHandler` instance with two additional properties.
+
+1. `notebook_dir` - The root notebook directory configured for the Jupyter Notebook server
+2. `tools` - An instance of [BundlerTools](https://github.com/jupyter-incubator/contentmanagement/blob/master/urth/cms/bundler.py#L15), set of common convenience functions that may be useful to bundlers
 
 # Develop
 

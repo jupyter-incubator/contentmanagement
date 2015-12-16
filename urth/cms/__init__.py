@@ -4,6 +4,7 @@ from .inject import InjectMagic
 from . import search
 from . import uploads
 from . import loader
+from . import bundler
 from jupyter_core.paths import jupyter_runtime_dir
 import os
 import json
@@ -45,3 +46,4 @@ def load_jupyter_server_extension(nb_app):
     nb_app.log.info('Loaded urth.cms')
     search.load_jupyter_server_extension(nb_app)
     uploads.load_jupyter_server_extension(nb_app)
+    bundler.load_jupyter_server_extension(nb_app)
