@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-.PHONY: build clean configs dev help install sdist test install
+.PHONY: build clean dev help install sdist test install
 
 PYTHON?=python3
 
@@ -33,35 +33,25 @@ clean:
 	@-rm -rf __pycache__ */__pycache__ */*/__pycache__
 	@-find . -name '*.pyc' -exec rm -fv {} \;
 
-configs:
-# Make copies of select git controlled files so that we don't edit them while
-# volume mounted at runtime.
-	@cp etc/notebook.default.json etc/notebook.json
-
 dev: dev-$(PYTHON)
 
-dev-python2: SETUP_CMD?=$(PYTHON2_SETUP);
-dev-python2: EXTENSION_DIR=/opt/conda/envs/python2/lib/python2.7/site-packages/urth
+dev-python2: SETUP_CMD?=$(PYTHON2_SETUP); pushd /src && pip install --no-deps -e . && popd
 dev-python2: _dev
 
-dev-python3: EXTENSION_DIR=/opt/conda/lib/python3.4/site-packages/urth
+dev-python3: SETUP_CMD?=pushd /src && pip install --no-deps -e . && popd
 dev-python3: _dev
 
 _dev: NB_HOME?=/root
 _dev: CMD?=sh -c "python --version; jupyter notebook --no-browser --port 8888 --ip='*'"
 _dev: AUTORELOAD?=no
-_dev: configs
+_dev:
 	@docker run -it --rm \
+		--user jovyan \
 		-p 9500:8888 \
 		-e AUTORELOAD=$(AUTORELOAD) \
-		-v `pwd`/urth_cms_js:$(NB_HOME)/.local/share/jupyter/nbextensions/urth_cms_js \
-		-v `pwd`/urth:$(EXTENSION_DIR) \
-		-v `pwd`/etc/jupyter_notebook_config.py:$(NB_HOME)/.jupyter/jupyter_notebook_config.py \
-		-v `pwd`/etc/notebook.json:$(NB_HOME)/.jupyter/nbconfig/notebook.json \
-		-v `pwd`/etc/tree.json:$(NB_HOME)/.jupyter/nbconfig/tree.json \
-		-v `pwd`/etc/edit.json:$(NB_HOME)/.jupyter/nbconfig/edit.json \
+		-v `pwd`:/src \
 		-v `pwd`/etc/notebooks:/home/jovyan/work \
-		$(DEV_REPO) bash -c '$(SETUP_CMD) $(CMD)'
+		$(DEV_REPO) bash -c '$(SETUP_CMD); $(CMD)'
 
 install: CMD?=exit
 install:
