@@ -9,6 +9,7 @@ script:
     - jupyter notebook --generate-config
     - python setup.py sdist
     - pip install --no-use-wheel dist/*.tar.gz
+    - python -B -m unittest discover -s test
 
 notifications:
     email:

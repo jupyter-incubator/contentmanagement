@@ -9,10 +9,11 @@ Content management extensions for Jupyter / IPython Notebook.
 The content management extensions provide the following:
 
 * Search dialog on dashboard, editor, and notebook screens to search over filenames and `.ipynb` content in the notebook directory
-* IPython kernel extension to make notebooks importable, and notebook cells injectable via `# <api>` and `# <help>` annotations (see included example notebooks)
+* IPython kernel extension to make notebooks importable, and notebook cells injectable via `# <api>` and `# <help>` annotations (see the [cookbooks example](etc/notebooks/test_cookbooks.ipynb))
 * Full-page drag-and-drop upload target
 * Pop-over table of contents navigation for notebooks
 * Plugin system for deploying and downloading notebook bundles (see *Writing Bundlers*)
+* Example *IPython Notebook bundle (.zip)* download bundler (see the [associations example](etc/notebooks/associations_demo/associations_demo.ipynb))
 
 Watch the first 15-20 minutes of the [September 1st Jupyter meeting video recording](https://www.youtube.com/watch?v=SJiezXPhVv8) for demonstrations of each content management feature.
 
@@ -29,15 +30,15 @@ Watch the first 15-20 minutes of the [September 1st Jupyter meeting video record
 
 Note: If you're running IPython Notebook 3.2.x, you can install the older 0.1.x version of the extension.
 
-# Try It
+## Try It
 
 If you want to try the extension and demos without installing it yourself, visit the [jupyter-incubator/showcase binder](http://mybinder.org/repo/jupyter-incubator/showcase). If the binder site is full, try the tmpnb instance at [http://jupyter.cloudet.xyz](http://jupyter.cloudet.xyz).
 
-# Install It
+## Install It
 
 `pip install jupyter_cms` and then restart your Notebook server if it was running during the install.
 
-# Writing Bundlers
+## Writing Bundlers
 
 This extension supports the writing of *bundlers*, Python modules that may take a notebook, transform it (e.g,. using nbconvert), package the result, and either deploy it or download it. Bundlers should register themselves at install time using code like the following:
 
@@ -92,11 +93,11 @@ The `handler` passed to bundler is a regular `tornado.web.RequestHandler` instan
 1. `notebook_dir` - The root notebook directory configured for the Jupyter Notebook server
 2. `tools` - An instance of [BundlerTools](https://github.com/jupyter-incubator/contentmanagement/blob/master/urth/cms/bundler.py#L15), set of common convenience functions that may be useful to bundlers
 
-# Develop
+## Develop
 
 This repository is setup for a Dockerized development environment.  These instructions assume the Docker client is running natively on the local host, and that it is configured to point to a Docker daemon running on a Linux virtual machine.
 
-## Mac OS X
+### Mac OS X
 
 Do this one-time setup if you do not have a local Docker environment yet.
 
