@@ -61,5 +61,3 @@ dist/
 *.egg-info/
 __pycache__/
 etc/notebooks/*
-!etc/notebooks/test_*.ipynb
-etc/notebook.json
