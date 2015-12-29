@@ -247,7 +247,7 @@ class NotebookFinder(object):
             loader = self.loader_cls(path, nb_path)
         return loader
 
-class MyWorkbenchFinder(object):
+class NotebookPathFinder(object):
     '''
     Treats the resources root folder and subdirectories as blank modules.
     '''
@@ -276,7 +276,7 @@ class MyWorkbenchFinder(object):
 _enabled = None
     
 def enable(root, 
-           mywb_loader_cls=BlankPackageLoader,
+           notebook_path_loader_cls=BlankPackageLoader,
            notebook_loader_cls=NotebookLoader):
     '''
     Adds finders to the sys.meta_path to load Jupyter Notebooks stored
@@ -284,11 +284,11 @@ def enable(root,
     '''
     global _enabled
     if _enabled is None:
-        wb_finder = MyWorkbenchFinder(root, mywb_loader_cls)
+        nb_path_finder = NotebookPathFinder(root, notebook_path_loader_cls)
         nb_finder = NotebookFinder(notebook_loader_cls)
-        sys.meta_path.append(wb_finder)
+        sys.meta_path.append(nb_path_finder)
         sys.meta_path.append(nb_finder)
-        _enabled = (wb_finder, nb_finder)
+        _enabled = (nb_path_finder, nb_finder)
     else:
         raise RuntimeError('loader already enabled')
 
