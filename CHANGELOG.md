@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 (2015-12-30)
+
+* Add server side extension for bundling notebooks for download and deployment
+* Define simple framework for plugging in new bundlers
+* Add a real tutorial about reusing notebooks as modules and cookbooks
+* Keep compatible with Jupyter Notebook 4.0.x
+
 ## 0.2.1 (2015-11-22)
 
 * Use standard lib scandir if present (Python 3.5)

@@ -1,4 +1,4 @@
-[![PyPI version](https://badge.fury.io/py/jupyter_cms.svg)](https://badge.fury.io/py/jupyter_cms) [![Google Group](https://img.shields.io/badge/-Google%20Group-lightgrey.svg)](https://groups.google.com/forum/#!forum/jupyter)
+[![PyPI version](https://badge.fury.io/py/jupyter_cms.svg)](https://badge.fury.io/py/jupyter_cms) [![Build Status](https://travis-ci.org/jupyter-incubator/contentmanagement.svg?branch=master)](https://travis-ci.org/jupyter-incubator/contentmanagement) [![Google Group](https://img.shields.io/badge/-Google%20Group-lightgrey.svg)](https://groups.google.com/forum/#!forum/jupyter)
 
 # Jupyter Content Management Extensions
 
@@ -17,11 +17,6 @@ The content management extensions provide the following:
 
 Watch the first 15-20 minutes of the [September 1st Jupyter meeting video recording](https://www.youtube.com/watch?v=SJiezXPhVv8) for demonstrations of each content management feature.
 
-## What it Lacks
-
-* More tests
-* Snippets in search hits (requires Whoosh unicode fixes for Python3)
-
 ## Prerequisites
 
 * Jupyter Notebook 4.0.x running on Python 3.x or Python 2.7.x
@@ -32,6 +27,8 @@ Note: If you're running IPython Notebook 3.2.x, you can install the older 0.1.x 
 ## Try It
 
 If you want to try the extension and demos without installing it yourself, visit the [jupyter-incubator/showcase binder](http://mybinder.org/repo/jupyter-incubator/showcase). If the binder site is full, try the tmpnb instance at [http://jupyter.cloudet.xyz](http://jupyter.cloudet.xyz).
+
+Note that both of these deployments tend to lag the latest stable release.
 
 ## Install It
 
@@ -90,7 +87,7 @@ def bundle(handler, absolute_notebook_path):
 The `handler` passed to bundler is a regular `tornado.web.RequestHandler` instance with two additional properties.
 
 1. `notebook_dir` - The root notebook directory configured for the Jupyter Notebook server
-2. `tools` - An instance of [BundlerTools](https://github.com/jupyter-incubator/contentmanagement/blob/master/urth/cms/bundler.py#L15), set of common convenience functions that may be useful to bundlers
+2. `tools` - An instance of [BundlerTools](https://github.com/jupyter-incubator/contentmanagement/blob/master/urth/cms/bundler.py#L15), a set of common convenience functions that may be useful to bundlers
 
 ## Develop
 
