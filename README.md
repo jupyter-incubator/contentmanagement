@@ -9,24 +9,23 @@ Content management extensions for Jupyter / IPython Notebook.
 The content management extensions provide the following:
 
 * Search dialog on dashboard, editor, and notebook screens to search over filenames and `.ipynb` content in the notebook directory
-* IPython kernel extension to make notebooks importable, and notebook cells injectable via `# <api>` and `# <help>` annotations (see the [cookbooks example](etc/notebooks/test_cookbooks.ipynb))
+* IPython kernel extension to make Python notebooks reusable as modules and cookbooks (see the [cookbooks tutorial](etc/notebooks/cookbooks_demo/use_cookbooks.ipynb))
 * Full-page drag-and-drop upload target
 * Pop-over table of contents navigation for notebooks
-* Plugin system for deploying and downloading notebook bundles (see *Writing Bundlers*)
+* Plugin system for deploying and downloading notebook bundles (see *Writing Bundlers* below)
 * Example *IPython Notebook bundle (.zip)* download bundler (see the [associations example](etc/notebooks/associations_demo/associations_demo.ipynb))
 
 Watch the first 15-20 minutes of the [September 1st Jupyter meeting video recording](https://www.youtube.com/watch?v=SJiezXPhVv8) for demonstrations of each content management feature.
 
 ## What it Lacks
 
-* Tests (they exist, just not ported to the open source yet)
-* User docs
+* More tests
 * Snippets in search hits (requires Whoosh unicode fixes for Python3)
 
 ## Prerequisites
 
 * Jupyter Notebook 4.0.x running on Python 3.x or Python 2.7.x
-* Edge Chrome, Firefox, or Safari
+* Edge, Chrome, Firefox, or Safari
 
 Note: If you're running IPython Notebook 3.2.x, you can install the older 0.1.x version of the extension.
 
