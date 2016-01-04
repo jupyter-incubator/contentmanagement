@@ -3,63 +3,14 @@
 
 import os
 from setuptools import setup
-from setuptools.command.install import install
-from setuptools.command.develop import develop
-
-from notebook.nbextensions import install_nbextension
-from notebook.services.config import ConfigManager
-from jupyter_core.paths import jupyter_config_dir
 
 # Get location of this file at runtime
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 # Eval the version tuple and string from the source
 VERSION_NS = {}
-with open(os.path.join(HERE, 'urth/cms/_version.py')) as f:
+with open(os.path.join(HERE, 'jupyter_cms', '_version.py')) as f:
     exec(f.read(), {}, VERSION_NS)
-
-EXT_DIR = os.path.join(os.path.dirname(__file__), 'urth_cms_js')
-SERVER_EXT_CONFIG = "c.NotebookApp.server_extensions.append('urth.cms')"
-
-def _install_notebook_extension():
-    print('Installing notebook extension')
-    install_nbextension(EXT_DIR, overwrite=True, user=True)
-    cm = ConfigManager()
-    print('Enabling extension for notebook')
-    cm.update('notebook', {"load_extensions": {'urth_cms_js/notebook/main': True}})
-    print('Enabling extension for dashboard')
-    cm.update('tree', {"load_extensions": {'urth_cms_js/dashboard/main': True}})
-    print('Enabling extension for text editor')
-    cm.update('edit', {"load_extensions": {'urth_cms_js/editor/main': True}})
-    print('Enabling notebook and associated files bundler')
-    cm.update('notebook', { 
-      'jupyter_cms_bundlers': {
-        'notebook_associations_download': {
-          'label': 'IPython Notebook bundle (.zip)',
-          'module_name': 'urth.cms.nb_bundler',
-          'group': 'download'
-        }
-      }
-    })
-
-    print('Installing notebook server extension')
-    fn = os.path.join(jupyter_config_dir(), 'jupyter_notebook_config.py')
-    with open(fn, 'r+') as fh:
-        lines = fh.read()
-        if SERVER_EXT_CONFIG not in lines:
-            fh.seek(0, 2)
-            fh.write('\n')
-            fh.write(SERVER_EXT_CONFIG)
-
-class InstallCommand(install):
-    def run(self):
-        install.run(self)
-        _install_notebook_extension()
-
-class DevelopCommand(develop):
-    def run(self):
-        develop.run(self)
-        _install_notebook_extension()
 
 install_requires=[
     'whoosh>=2.7.0, <3.0',
@@ -93,14 +44,12 @@ for more information.
     license='BSD',
     platforms=['Jupyter Notebook 4.0.x'],
     packages=[
-        'urth', 
-        'urth.cms'
+        'jupyter_cms'
+    ],
+    scripts=[
+        'scripts/jupyter-cms'
     ],
     install_requires=install_requires,
-    cmdclass={
-        'install': InstallCommand,
-        'develop': DevelopCommand,
-    },
     classifiers=[
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators',

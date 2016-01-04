@@ -5,7 +5,7 @@ import unittest
 import os
 import shutil
 import tempfile
-import urth.cms.bundler as bundler
+import jupyter_cms.bundler as bundler
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 

@@ -1,2 +1,1 @@
-recursive-include urth_cms_js *.js *.css
-include VERSION
+recursive-include jupyter_cms/nbextension *.js *.css

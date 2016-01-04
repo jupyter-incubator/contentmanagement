@@ -2,8 +2,8 @@
 # Distributed under the terms of the Modified BSD License.
 
 import unittest
-import urth.cms.loader as loader
-import urth.cms.inject as inject
+import jupyter_cms.loader as loader
+import jupyter_cms.inject as inject
 from os.path import join as pjoin
 from os.path import abspath, dirname
 
