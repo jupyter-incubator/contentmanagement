@@ -119,11 +119,6 @@ class ExtensionDeactivateApp(DisableNBExtensionApp):
     def _classes_default(self):
         return [ExtensionDeactivateApp, DisableNBExtensionApp]
 
-    # def _recursive_get(self, obj, key_list):
-    #     if obj is None or len(key_list) == 0:
-    #         return obj
-    #     return self._recursive_get(obj.get(key_list[0], None), key_list[1:])
-
     def disable_server_extension(self, extension):
         server_cm = ConfigManager(config_dir=jupyter_config_dir())
         

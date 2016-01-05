@@ -32,7 +32,27 @@ Note that both of these deployments tend to lag the latest stable release.
 
 ## Install It
 
-`pip install jupyter_cms` and then restart your Notebook server if it was running during the install.
+```bash
+# install the python package
+pip install jupyter_cms
+# install the JS extensions into ~/.local/jupyter
+# see jupyter cms install --help for other options
+jupyter cms install --user --symlink --overwrite
+# enable the JS and server extensions in your ~/.jupyter
+jupyter cms activate
+
+# deactivate it later with
+jupyter cms deactivate
+```
+
+You will need to restart your notebook server if it was running during the activate step.
+
+## Uninstall It
+
+```bash
+# 
+
+
 
 ## Writing Bundlers
 

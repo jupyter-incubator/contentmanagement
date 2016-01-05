@@ -35,6 +35,8 @@ setup(
 * IPython kernel extension to make notebooks importable, and notebook cells injectable via # <api> and # <help> annotations
 * Full-page drag-and-drop upload target
 * Pop-over table of contents navigation for notebooks
+* Plugin system for deploying and downloading notebook bundles
+* Example *IPython Notebook bundle (.zip)* download bundler
 
 See `the project README <https://github.com/jupyter-incubator/contentmanagement>`_
 for more information. 
