@@ -35,7 +35,7 @@ Note that both of these deployments tend to lag the latest stable release.
 ```bash
 # install the python package
 pip install jupyter_cms
-# install the JS extensions into ~/.local/jupyter
+# register the notebook frontend extensions into ~/.local/jupyter
 # see jupyter cms install --help for other options
 jupyter cms install --user --symlink --overwrite
 # enable the JS and server extensions in your ~/.jupyter
@@ -50,9 +50,11 @@ You will need to restart your notebook server if it was running during the activ
 ## Uninstall It
 
 ```bash
-# 
+jupyter cms deactivate
+pip uninstall jupyter_cms
+```
 
-
+Note that there is no Jupyter method for removing the installed JavaScript extension assets. You will need to clean them up manually from your chosen install location.
 
 ## Writing Bundlers
 
