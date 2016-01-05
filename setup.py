@@ -48,6 +48,7 @@ for more information.
     packages=[
         'jupyter_cms'
     ],
+    include_package_data=True,
     scripts=[
         'scripts/jupyter-cms'
     ],

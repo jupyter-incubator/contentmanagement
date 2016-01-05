@@ -63,11 +63,10 @@ _dev:
 install: CMD?=exit
 install:
 	@docker run -it --rm \
-		--user jovyan \
 		-v `pwd`:/src \
 		$(REPO) bash -c 'cd /src/dist && \
 			pip install --no-binary :all: $$(ls -1 *.tar.gz | tail -n 1) && \
-			jupyter cms install && \
+			jupyter cms install --user && \
 			jupyter cms activate && \
 			$(CMD)'
 
