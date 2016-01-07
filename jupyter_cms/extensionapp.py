@@ -77,6 +77,7 @@ class ExtensionActivateApp(EnableNBExtensionApp):
         return [ExtensionActivateApp, EnableNBExtensionApp]
 
     def enable_server_extension(self, extension):
+        '''Enables the server side extension in the user config.'''
         server_cm = ConfigManager(config_dir=jupyter_config_dir())
         
         makedirs(server_cm.config_dir)
@@ -90,6 +91,19 @@ class ExtensionActivateApp(EnableNBExtensionApp):
             cfg['NotebookApp']['server_extensions'] += [extension]
         server_cm.update('jupyter_notebook_config', cfg)
 
+    def enable_bundler(self):
+        '''Enables the notebook bundler extension.'''
+        cm = ConfigManager(parent=self, config=self.config)
+        cm.update('notebook', { 
+            'jupyter_cms_bundlers': {
+                'notebook_associations_download': {
+                    'label': 'IPython Notebook bundle (.zip)',
+                    'module_name': 'jupyter_cms.nb_bundler',
+                    'group': 'download'
+                }
+            }
+        })
+
     def start(self):
         self.log.info("Activating jupyter_cms notebook server extensions")
         self.enable_server_extension('jupyter_cms')
@@ -101,25 +115,27 @@ class ExtensionActivateApp(EnableNBExtensionApp):
         self.enable_nbextension("jupyter_cms/dashboard/main")
         self.section = "edit"
         self.enable_nbextension("jupyter_cms/editor/main")
+        self.enable_bundler()
 
         self.log.info("Done. You may need to restart the Jupyter notebook server for changes to take effect.")
 
 class ExtensionDeactivateApp(DisableNBExtensionApp):
     '''Subclass that deactivates this particular extension.'''
-    name = u'nbgrader-extension-deactivate'
-    description = u'Deactivate the nbgrader extension'
+    name = u'jupyter-cms-extension-deactivate'
+    description = u'Deactivate the jupyter_cms extension'
 
     flags = {}
     aliases = {}
 
     examples = """
-        nbgrader extension deactivate
+        jupyter cms deactivate
     """
 
     def _classes_default(self):
         return [ExtensionDeactivateApp, DisableNBExtensionApp]
 
     def disable_server_extension(self, extension):
+        '''Disables the server side extension in the user config.'''
         server_cm = ConfigManager(config_dir=jupyter_config_dir())
         
         makedirs(server_cm.config_dir)
@@ -140,6 +156,15 @@ class ExtensionDeactivateApp(DisableNBExtensionApp):
             cfg['NotebookApp']['server_extensions'].remove(extension)
         server_cm.update('jupyter_notebook_config', cfg)
 
+    def disable_bundler(self):
+        '''Disables the notebook bundler extension.'''
+        cm = ConfigManager(parent=self, config=self.config)
+        cm.update('notebook', { 
+            'jupyter_cms_bundlers': {
+                'notebook_associations_download': None
+            }
+        })
+
     def start(self):
         self.log.info("Deactivating jupyter_cms notebook server extensions")
         self.disable_server_extension('jupyter_cms')
@@ -151,11 +176,12 @@ class ExtensionDeactivateApp(DisableNBExtensionApp):
         self.disable_nbextension("jupyter_cms/dashboard/main")
         self.section = "edit"
         self.disable_nbextension("jupyter_cms/editor/main")
+        self.disable_bundler()
 
         self.log.info("Done. You may need to restart the Jupyter notebook server for changes to take effect.")
 
 class ExtensionApp(Application):
-
+    '''CLI for extension management.'''
     name = u'jupyter_cms extension'
     description = u'Utilities for managing the jupyter_cms extension'
     examples = ""
