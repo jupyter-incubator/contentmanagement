@@ -70,7 +70,6 @@ install:
 			jupyter cms activate && \
 			$(CMD)'
 
-sdist: REPO?=jupyter/pyspark-notebook:$(TAG)
 sdist:
 	@docker run -it --rm \
 		-v `pwd`:/src \
