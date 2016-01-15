@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0 (2016-01-15)
+
+* Separate `pip install` from `jupyter dashboards [install | activate | deactivate]`
+* Match the Python package to the distribution name, `jupyter_cms`
+
 ## 0.3.0 (2015-12-30)
 
 * Add server side extension for bundling notebooks for download and deployment
