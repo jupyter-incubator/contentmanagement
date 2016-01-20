@@ -2,6 +2,7 @@
 # Distributed under the terms of the Modified BSD License.
 
 import os
+import sys
 from setuptools import setup
 
 # Get location of this file at runtime
@@ -16,14 +17,14 @@ install_requires=[
     'whoosh>=2.7.0, <3.0',
 ]
 
-# Use the built-in version of scandir if possible, 
+# Use the built-in version of scandir if possible,
 # otherwise require the scandir module
 try:
     from os import scandir
 except ImportError:
     install_requires.append('scandir>=1.1, <2.0')
 
-setup(
+setup_args = dict(
     name='jupyter_cms',
     author='Jupyter Development Team',
     author_email='jupyter@googlegroups.com',
@@ -39,8 +40,8 @@ setup(
 * Example *IPython Notebook bundle (.zip)* download bundler
 
 See `the project README <https://github.com/jupyter-incubator/contentmanagement>`_
-for more information. 
-''',   
+for more information.
+''',
     url='https://github.com/jupyter-incubator/contentmanagement',
     version=VERSION_NS['__version__'],
     license='BSD',
@@ -65,3 +66,16 @@ for more information.
         'Programming Language :: Python :: 3.5'
     ]
 )
+
+if 'setuptools' in sys.modules:
+    # setupstools turns entrypoint scripts into executables on windows
+    setup_args['entry_points'] = {
+        'console_scripts': [
+            'jupyter-cms = jupyter_cms.extensionapp:main'
+        ]
+    }
+    # Don't bother installing the .py scripts if if we're using entrypoints
+    setup_args.pop('scripts', None)
+
+if __name__ == '__main__':
+    setup(**setup_args)
