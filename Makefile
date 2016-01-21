@@ -5,9 +5,17 @@
 
 PYTHON?=python3
 
-REPO:=jupyter/pyspark-notebook:a388c4a66fd4
-DEV_REPO:=jupyter/pyspark-notebook-cms:a388c4a66fd4
+REPO:=jupyter/pyspark-notebook:2988869079e6
+DEV_REPO:=jupyter/pyspark-notebook-cms:2988869079e6
 PYTHON2_SETUP:=source activate python2
+
+define EXT_DEV_SETUP
+	pushd /src && \
+	pip install --no-deps -e . && \
+	jupyter cms install --user && \
+	jupyter cms activate && \
+	popd
+endef
 
 help:
 	@echo 'Host commands:'
@@ -35,14 +43,13 @@ clean:
 
 dev: dev-$(PYTHON)
 
-dev-python2: SETUP_CMD?=$(PYTHON2_SETUP); pushd /src && pip install --no-deps -e . && popd
+dev-python2: LANG_SETUP_CMD?=$(PYTHON2_SETUP) && python --version
 dev-python2: _dev
 
-dev-python3: SETUP_CMD?=pushd /src && pip install --no-deps -e . && popd
+dev-python3: LANG_SETUP_CMD?=python --version
 dev-python3: _dev
 
-_dev: NB_HOME?=/root
-_dev: CMD?=sh -c "python --version; jupyter notebook --no-browser --port 8888 --ip='*'"
+_dev: CMD?=start-notebook.sh
 _dev: AUTORELOAD?=no
 _dev:
 	@docker run -it --rm \
@@ -51,18 +58,18 @@ _dev:
 		-e AUTORELOAD=$(AUTORELOAD) \
 		-v `pwd`:/src \
 		-v `pwd`/etc/notebooks:/home/jovyan/work \
-		$(DEV_REPO) bash -c '$(SETUP_CMD); $(CMD)'
+		$(DEV_REPO) bash -c '$(LANG_SETUP_CMD) && $(EXT_DEV_SETUP) && $(CMD)'
 
 install: CMD?=exit
 install:
 	@docker run -it --rm \
-		--user jovyan \
 		-v `pwd`:/src \
 		$(REPO) bash -c 'cd /src/dist && \
 			pip install --no-binary :all: $$(ls -1 *.tar.gz | tail -n 1) && \
+			jupyter cms install --user && \
+			jupyter cms activate && \
 			$(CMD)'
 
-sdist: REPO?=jupyter/pyspark-notebook:$(TAG)
 sdist:
 	@docker run -it --rm \
 		-v `pwd`:/src \

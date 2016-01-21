@@ -3,7 +3,7 @@
 
 import os
 import unittest
-import urth.cms.loader as loader
+import jupyter_cms.loader as loader
 from os.path import join as pjoin
 from os.path import abspath, dirname
 
