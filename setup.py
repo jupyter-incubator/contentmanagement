@@ -14,7 +14,7 @@ with open(os.path.join(HERE, 'jupyter_cms', '_version.py')) as f:
     exec(f.read(), {}, VERSION_NS)
 
 install_requires=[
-    'whoosh>=2.7.0, <3.0',
+    'whoosh>=2.7.0,<3.0',
 ]
 
 # Use the built-in version of scandir if possible,
@@ -22,7 +22,7 @@ install_requires=[
 try:
     from os import scandir
 except ImportError:
-    install_requires.append('scandir>=1.1, <2.0')
+    install_requires.append('scandir>=1.1,<2.0')
 
 setup_args = dict(
     name='jupyter_cms',
