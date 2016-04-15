@@ -9,6 +9,33 @@ from jupyter_core.paths import jupyter_runtime_dir
 import os
 import json
 
+def _jupyter_server_extension_paths():
+    '''API for server extension installation on notebook 4.2'''
+    return [{
+        "module": "jupyter_cms"
+    }]
+
+def _jupyter_nbextension_paths():
+    '''API for JS extension installation on notebook 4.2'''
+    return [{
+        'section': 'notebook',
+        'src': 'nbextension',
+        'dest': 'jupyter_cms',
+        'require': 'jupyter_cms/notebook/main'
+    },
+    {
+        'section': 'tree',
+        'src': 'nbextension',
+        'dest': 'jupyter_cms',
+        'require': 'jupyter_cms/dashboard/main'
+    },
+    {
+        'section': 'edit',
+        'src': 'nbextension',
+        'dest': 'jupyter_cms',
+        'require': 'jupyter_cms/editor/main'
+    }]
+
 # Use the built-in version of scandir if possible, otherwise
 # use the scandir module version
 try:
