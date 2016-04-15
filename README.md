@@ -32,29 +32,59 @@ Note that both of these deployments tend to lag the latest stable release.
 
 ## Install It
 
+In Jupyter Notebook 4.2, you install and activate the extension using the `jupyter` command line like so:
+
+```bash
+# install the python package
+pip install jupyter_cms
+
+# enable the server-side extension in the system prefix by default (e.g., conda env, venv)
+# or see jupyter serverextension enable --help for other options (e.g., --user)
+jupyter serverextension enable --py jupyter_cms --sys-prefix
+
+# install and enable the browser-side extension in the system prefix by default
+# or see jupyter nbextension enable --help for other options (e.g., --user)
+jupyter nbextension install --py jupyter_cms --sys-prefix
+jupyter nbextension enable --py jupyter_cms --sys-prefix
+```
+
+In Jupyter Notebook 4.1 and 4.0, you install and activate the extension like so:
+
 ```bash
 # install the python package
 pip install jupyter_cms
 # register the notebook frontend extensions into ~/.local/jupyter
-# see jupyter cms install --help for other options
+# see jupyter cms install --help for other options (e.g., --sys-prefix)
 jupyter cms install --user --symlink --overwrite
 # enable the JS and server extensions in your ~/.jupyter
 jupyter cms activate
-
-# deactivate it later with
-jupyter cms deactivate
 ```
 
-You will need to restart your notebook server if it was running during the activate step.
+In either case, you will need to restart your notebook server if it was running during the enable/activate step. Also, note that you can run `jupyter --paths` to get a sense of where the extension files will be installed.
 
 ## Uninstall It
 
+In Jupyter Notebook 4.2:
+
 ```bash
-jupyter cms deactivate
+# disable extensions and remove frontend files
+jupyter serverextension disable --py jupyter_cms --sys-prefix
+jupyter nbextension disable --py jupyter_cms --sys-prefix
+jupyter nbextension uninstall --py jupyter_cms --sys-prefix
+
+# remove the python package
 pip uninstall jupyter_cms
 ```
 
-Note that there is no Jupyter method for removing the installed JavaScript extension assets. You will need to clean them up manually from your chosen install location.
+In Jupyter Notebook 4.0 and 4.1:
+
+```bash
+# disable extensions, but no way to remove frontend assets in this version
+jupyter cms deactivate
+
+# remove the python package
+pip uninstall jupyter_cms
+```
 
 ## Writing Bundlers
 
