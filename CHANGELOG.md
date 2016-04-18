@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 (2016-04-18)
+
+* Make compatible with Jupyter Notebook 4.0.x through 4.2.x
+* Improve documentation about bundlers
+* Add new `jupyter cms quick-setup` for notebook 4.2
+* Fix pip install in some shell configuration (whitespace problem)
+* Fix bundler exception on Python 2 (unicode problem)
+
 ## 0.4.0 (2016-01-15)
 
 * Separate `pip install` from `jupyter dashboards [install | activate | deactivate]`
