@@ -225,8 +225,17 @@ class BundlerHandler(IPythonHandler):
             bundler = self.get_bundler(bundler_id)
         except KeyError:
             raise web.HTTPError(404, 'Bundler %s not found' % bundler_id)
+        
+        module_name = bundler['module_name']
         try:
-            bundler_mod = import_item(bundler['module_name'])
+            # no-op in python3, decode error in python2
+            module_name = str(module_name)
+        except UnicodeEncodeError:
+            # Encode unicode as utf-8 in python2 else import_item fails
+            module_name = module_name.encode('utf-8')
+        
+        try:
+            bundler_mod = import_item(module_name)
         except ImportError:
             raise web.HTTPError(500, 'Could not import bundler %s ' % bundler_id)
 
