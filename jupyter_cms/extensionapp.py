@@ -4,10 +4,20 @@ import errno
 import os.path
 import sys
 
+from ._version import __version__
+
 from jupyter_core.paths import jupyter_config_dir
 from notebook.services.config import ConfigManager
 from notebook.nbextensions import (InstallNBExtensionApp, EnableNBExtensionApp, 
     DisableNBExtensionApp, flags, aliases)
+
+try:
+    from notebook.nbextensions import BaseNBExtensionApp
+    _new_extensions = True
+except ImportError:
+    BaseNBExtensionApp = object
+    _new_extensions = False
+
 from traitlets import Unicode
 from traitlets.config.application import catch_config_error
 from traitlets.config.application import Application
@@ -180,6 +190,56 @@ class ExtensionDeactivateApp(DisableNBExtensionApp):
 
         self.log.info("Done. You may need to restart the Jupyter notebook server for changes to take effect.")
 
+class ExtensionQuickSetupApp(BaseNBExtensionApp):
+    """Installs and enables all parts of this extension"""
+    name = "jupyter cms quick-setup"
+    version = __version__
+    description = "Installs and enables all features of the jupyter_cms extension"
+
+    def start(self):
+        self.argv.extend(['--py', 'jupyter_cms'])
+        
+        from notebook import serverextensions
+        install = serverextensions.EnableServerExtensionApp()
+        install.initialize(self.argv)
+        install.start()
+        from notebook import nbextensions
+        install = nbextensions.InstallNBExtensionApp()
+        install.initialize(self.argv)
+        install.start()
+        enable = nbextensions.EnableNBExtensionApp()
+        enable.initialize(self.argv)
+        enable.start()
+        from jupyter_cms import bundlerapp
+        enable = bundlerapp.EnableNBBundlerApp()
+        enable.initialize(self.argv)
+        enable.start()
+
+class ExtensionQuickRemovalApp(BaseNBExtensionApp):
+    """Disables and uninstalls all parts of this extension"""
+    name = "jupyter cms quick-remove"
+    version = __version__
+    description = "Disables and removes all features of the jupyter_cms extension"
+
+    def start(self):
+        self.argv.extend(['--py', 'jupyter_cms'])
+        
+        from jupyter_cms import bundlerapp
+        enable = bundlerapp.DisableNBBundlerApp()
+        enable.initialize(self.argv)
+        enable.start()
+        from notebook import nbextensions
+        enable = nbextensions.DisableNBExtensionApp()
+        enable.initialize(self.argv)
+        enable.start()
+        install = nbextensions.UninstallNBExtensionApp()
+        install.initialize(self.argv)
+        install.start()
+        from notebook import serverextensions
+        install = serverextensions.DisableServerExtensionApp()
+        install.initialize(self.argv)
+        install.start()
+
 class ExtensionApp(Application):
     '''CLI for extension management.'''
     name = u'jupyter_cms extension'
@@ -189,17 +249,28 @@ class ExtensionApp(Application):
     subcommands = dict(
         install=(
             ExtensionInstallApp,
-            "Install the extension."
+            "Install the extension (notebook<4.2)"
         ),
         activate=(
             ExtensionActivateApp,
-            "Activate the extension."
+            "Activate the extension (notebook<4.2)"
         ),
         deactivate=(
             ExtensionDeactivateApp,
-            "Deactivate the extension."
-        )
+            "Deactivate the extension (notebook<4.2)"
+        ),
     )
+    if _new_extensions:
+        subcommands.update({
+            "quick-setup": (
+                ExtensionQuickSetupApp,
+                "Install and enable everything in the package (notebook>=4.2)"
+            ),
+            "quick-remove": (
+                ExtensionQuickRemovalApp,
+                "Disable and uninstall everything in the package (notebook>=4.2)"
+            )
+        })
 
     def _classes_default(self):
         classes = super(ExtensionApp, self)._classes_default()
