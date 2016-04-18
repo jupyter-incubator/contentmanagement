@@ -19,7 +19,7 @@ Watch the first 15-20 minutes of the [September 1st Jupyter meeting video record
 
 ## Prerequisites
 
-* Jupyter Notebook 4.0.x running on Python 3.x or Python 2.7.x
+* Jupyter Notebook 4.0.x, 4.1.x, or 4.2.x running on Python 3.x or Python 2.7.x
 * Edge, Chrome, Firefox, or Safari
 
 Note: If you're running IPython Notebook 3.2.x, you can install the older 0.1.x version of the extension.
@@ -32,34 +32,32 @@ Note that both of these deployments tend to lag the latest stable release.
 
 ## Install It
 
-In Jupyter Notebook 4.2, you install and activate the extension using the `jupyter` command line like so:
+In Jupyter Notebook 4.2, you can install and activate all features of the extension in two commands like so:
 
 ```bash
-# install the python package
+# Install the python package
 pip install jupyter_cms
 
-# enable the server-side extension in the system prefix by default (e.g., conda env, venv)
-# or see jupyter serverextension enable --help for other options (e.g., --user)
-jupyter serverextension enable --py jupyter_cms --sys-prefix
-
-# install and enable the browser-side extension in the system prefix by default
-# or see jupyter nbextension enable --help for other options (e.g., --user)
-jupyter nbextension install --py jupyter_cms --sys-prefix
-jupyter nbextension enable --py jupyter_cms --sys-prefix
-
-# enable the notebook bundler
-jupyter bundler enable --py jupyter_cms --sys-prefix
+# Install all parts of the extension to the active conda / venv / python env
+# and enable all parts of it in the jupyter profile in that environment
+# See jupyter cms quick-setup --help for other options (e.g., --user)
+jupyter cms quick-setup --sys-prefix
+# The above command is equivalent to this sequence of commands:
+# jupyter serverextension enable --py jupyter_cms --sys-prefix
+# jupyter nbextension install --py jupyter_cms --sys-prefix
+# jupyter nbextension enable --py jupyter_cms --sys-prefix
+# jupyter bundler enable --py jupyter_cms --sys-prefix
 ```
 
 In Jupyter Notebook 4.1 and 4.0, you install and activate the extension like so:
 
 ```bash
-# install the python package
+# Install the python package
 pip install jupyter_cms
-# register the notebook frontend extensions into ~/.local/jupyter
-# see jupyter cms install --help for other options (e.g., --sys-prefix)
+# Register the notebook frontend extensions into ~/.local/jupyter
+# See jupyter cms install --help for other options (e.g., --sys-prefix)
 jupyter cms install --user --symlink --overwrite
-# enable the JS and server extensions in your ~/.jupyter
+# Enable the JS and server extensions in your ~/.jupyter
 jupyter cms activate
 ```
 
@@ -70,29 +68,53 @@ In either case, you will need to restart your notebook server if it was running 
 In Jupyter Notebook 4.2:
 
 ```bash
-# disable extensions and remove frontend files
-jupyter serverextension disable --py jupyter_cms --sys-prefix
-jupyter nbextension disable --py jupyter_cms --sys-prefix
-jupyter nbextension uninstall --py jupyter_cms --sys-prefix
-jupyter bundler disable --py jupyter_cms --sys-prefix
+# Remove all parts of the extension from the active conda / venv / python env
+# See jupyter cms quick-remove --help for other options (e.g., --user)
+jupyter cms quick-remove --sys-prefix
+# The above command is equivalent to this sequence of commands:
+# jupyter bundler disable --py jupyter_cms --sys-prefix
+# jupyter nbextension disable --py jupyter_cms --sys-prefix
+# jupyter nbextension uninstall --py jupyter_cms --sys-prefix
+# jupyter serverextension disable --py jupyter_cms --sys-prefix
 
-# remove the python package
+# Remove the python package
 pip uninstall jupyter_cms
 ```
 
 In Jupyter Notebook 4.0 and 4.1:
 
 ```bash
-# disable extensions, but no way to remove frontend assets in this version
+# Disable extensions, but no way to remove frontend assets in this version
 jupyter cms deactivate
 
-# remove the python package
+# Remove the python package
 pip uninstall jupyter_cms
 ```
 
 ## Writing Bundlers
 
-This extension supports the writing of *bundlers*, Python modules that may take a notebook, transform it (e.g,. using nbconvert), package the result, and either deploy it or download it. Bundlers should register themselves at install time using code like the following:
+This extension supports the writing of *bundlers*, Python modules that may take a notebook, transform it (e.g,. using nbconvert), package the result, and either deploy it or download it. 
+
+In Jupyter Notebook 4.2 and higher, a package should declare its metadata by implementing the `_jupyter_bundler_paths` function.
+
+```python
+def _jupyter_bundler_paths():
+    return [{
+            'name': 'notebook_associations_download',
+            'label': 'IPython Notebook bundle (.zip)',
+            'module_name': 'jupyter_cms.nb_bundler',
+            'group': 'download'
+    }]
+```
+
+The package can then instruct its users to enable and disable its bundlers via `jupyter bundler` command like so:
+
+```bash
+jupyter bundler enable --py my_bundlers
+jupyter bundler disable --py my_bundlers
+```
+
+In earlier versions of Jupyter Notebook, the package must implement its own CLI for enabling and disabling the bundler and update the user-specified config directly like so:
 
 ```python
 from notebook.services.config import ConfigManager
