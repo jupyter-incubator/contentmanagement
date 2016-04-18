@@ -3,7 +3,12 @@
 import sys
 import os
 
-from notebook.nbextensions import (BaseNBExtensionApp, _get_config_dir)
+try:
+    from notebook.nbextensions import (BaseNBExtensionApp, _get_config_dir)
+except ImportError:
+    sys.exit("Aborted: {} requires notebook>=4.2".format(
+        os.path.basename(sys.argv[0])))
+    
 from ._version import __version__
 
 from traitlets.config.manager import BaseJSONConfigManager
