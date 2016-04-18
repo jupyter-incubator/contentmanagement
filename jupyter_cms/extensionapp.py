@@ -245,33 +245,36 @@ class ExtensionApp(Application):
     name = u'jupyter_cms extension'
     description = u'Utilities for managing the jupyter_cms extension'
     examples = ""
+    
+    subcommands = dict()
 
-    subcommands = dict(
-        install=(
-            ExtensionInstallApp,
-            "Install the extension (notebook<4.2)"
-        ),
-        activate=(
-            ExtensionActivateApp,
-            "Activate the extension (notebook<4.2)"
-        ),
-        deactivate=(
-            ExtensionDeactivateApp,
-            "Deactivate the extension (notebook<4.2)"
-        ),
-    )
     if _new_extensions:
         subcommands.update({
             "quick-setup": (
                 ExtensionQuickSetupApp,
-                "Install and enable everything in the package (notebook>=4.2)"
+                "Install and enable everything in the package"
             ),
             "quick-remove": (
                 ExtensionQuickRemovalApp,
-                "Disable and uninstall everything in the package (notebook>=4.2)"
+                "Disable and uninstall everything in the package"
             )
         })
-
+    else:
+        subcommands.update(dict(
+            install=(
+                ExtensionInstallApp,
+                "Install the extension"
+            ),
+            activate=(
+                ExtensionActivateApp,
+                "Activate the extension"
+            ),
+            deactivate=(
+                ExtensionDeactivateApp,
+                "Deactivate the extension"
+            ),
+        ))
+        
     def _classes_default(self):
         classes = super(ExtensionApp, self)._classes_default()
 
