@@ -249,15 +249,15 @@ class ExtensionApp(Application):
     subcommands = dict(
         install=(
             ExtensionInstallApp,
-            "Install the extension (notebook<=4.1)"
+            "Install the extension (notebook<4.2)"
         ),
         activate=(
             ExtensionActivateApp,
-            "Activate the extension (notebook<=4.1)"
+            "Activate the extension (notebook<4.2)"
         ),
         deactivate=(
             ExtensionDeactivateApp,
-            "Deactivate the extension (notebook<=4.1)"
+            "Deactivate the extension (notebook<4.2)"
         ),
     )
     if _new_extensions:
