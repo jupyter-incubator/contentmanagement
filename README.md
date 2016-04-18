@@ -46,6 +46,9 @@ jupyter serverextension enable --py jupyter_cms --sys-prefix
 # or see jupyter nbextension enable --help for other options (e.g., --user)
 jupyter nbextension install --py jupyter_cms --sys-prefix
 jupyter nbextension enable --py jupyter_cms --sys-prefix
+
+# enable the notebook bundler
+jupyter bundler enable --py jupyter_cms --sys-prefix
 ```
 
 In Jupyter Notebook 4.1 and 4.0, you install and activate the extension like so:
@@ -71,6 +74,7 @@ In Jupyter Notebook 4.2:
 jupyter serverextension disable --py jupyter_cms --sys-prefix
 jupyter nbextension disable --py jupyter_cms --sys-prefix
 jupyter nbextension uninstall --py jupyter_cms --sys-prefix
+jupyter bundler disable --py jupyter_cms --sys-prefix
 
 # remove the python package
 pip uninstall jupyter_cms

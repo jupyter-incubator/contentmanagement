@@ -45,13 +45,14 @@ for more information.
     url='https://github.com/jupyter-incubator/contentmanagement',
     version=VERSION_NS['__version__'],
     license='BSD',
-    platforms=['Jupyter Notebook 4.0.x'],
+    platforms=['Jupyter Notebook 4.0.x', 'Jupyter Notebook 4.1.x', 'Jupyter Notebook 4.2.x'],
     packages=[
         'jupyter_cms'
     ],
     include_package_data=True,
     scripts=[
-        'scripts/jupyter-cms'
+        'scripts/jupyter-cms',
+        'scripts/jupyter-bundler'
     ],
     install_requires=install_requires,
     classifiers=[
@@ -71,7 +72,8 @@ if 'setuptools' in sys.modules:
     # setupstools turns entrypoint scripts into executables on windows
     setup_args['entry_points'] = {
         'console_scripts': [
-            'jupyter-cms = jupyter_cms.extensionapp:main'
+            'jupyter-cms = jupyter_cms.extensionapp:main',
+            'jupyter-bundler = jupyter_cms.bundlerapp:main'
         ]
     }
     # Don't bother installing the .py scripts if if we're using entrypoints
