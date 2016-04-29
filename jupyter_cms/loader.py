@@ -31,7 +31,7 @@ def rich_help():
                     'template_file' : 'basic'
                 }
             }))
-        # include style in every output; tried it global on import, but if the import is 
+        # include style in every output; tried it global on import, but if the import is
         # re-run it's lost because there is no output on a repeat module import
         output = '''<style>
     .output .input_prompt,
@@ -50,14 +50,15 @@ def convert_notebook(notebook):
 class NotebookLoader(object):
     '''Module loader for IPython Notebooks with support for rich help.'''
     API_REX = re.compile('#\s*<api>')
-    # help annotation acceptable at the start of the cell or on the line 
+    # help annotation acceptable at the start of the cell or on the line
     # immediately below a cell magic
     HELP_REX = re.compile('(%%[^\n]+\n)?(#\s*<help(:([^>]+))?>\s*)')
 
-    def __init__(self, path, nb_path):
+    def __init__(self, path, nb_path, inject_locals={}):
         self.shell = InteractiveShell.instance()
         self.path = path
         self.nb_path = nb_path
+        self.inject_locals = inject_locals
 
     def create_rich_help_func(self):
         '''
@@ -72,7 +73,7 @@ class NotebookLoader(object):
         '''
         Attach a help() function to the object that renders rich help. If obj
         is None, don't attach the help renderer, just return it. In either case,
-        append the cell markup and the previous cell (if it's markdown) to the 
+        append the cell markup and the previous cell (if it's markdown) to the
         help renderer.
         '''
         if obj is None:
@@ -117,6 +118,7 @@ class NotebookLoader(object):
         '''
         Evaluate notebook cells.
         '''
+        mod.__dict__.update(self.inject_locals)
         prev = None
         if not len(nb.cells):
             # notebook is new and has no cells
@@ -213,7 +215,7 @@ class NotebookLoader(object):
 class BlankPackageLoader(object):
     '''
     Acts like the root of an empty Python package.
-    ''' 
+    '''
     def __init__(self, path, *args):
         self.path = path
 
@@ -240,7 +242,7 @@ class NotebookFinder(object):
         name = fullname.rsplit('.', 1)[-1]
         path = [''] if path is None or not len(path) else path
         fullpath = os.path.join(*path)
-        
+
         nb_path = os.path.join(fullpath, name + ".ipynb")
         loader = None
         if os.path.isfile(nb_path):
@@ -274,8 +276,8 @@ class NotebookPathFinder(object):
         return loader
 
 _enabled = None
-    
-def enable(root, 
+
+def enable(root,
            notebook_path_loader_cls=BlankPackageLoader,
            notebook_loader_cls=NotebookLoader):
     '''
@@ -303,12 +305,12 @@ def disable():
         _enabled = None
     else:
         raise RuntimeError('loader not enabled')
-    
-def load_notebook(path):
+
+def load_notebook(path, inject_locals={}):
     '''
     Loads a notebook as a module given its absolute path. Returns a new instance
-    of the module every time it is called unlike normal imports which 
+    of the module every time it is called unlike normal imports which
     sys.modules caches based on name.
     '''
-    loader = NotebookLoader([], path)
+    loader = NotebookLoader([], path, inject_locals=inject_locals)
     return loader.load_module_by_path()
