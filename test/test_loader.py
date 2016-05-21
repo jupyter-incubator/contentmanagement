@@ -112,6 +112,21 @@ class TestNotebookFinder(unittest.TestCase):
             pass
         else:
             self.assertTrue(False, 'expected ImportError')
+            
+    def test_cwd_notebook(self):
+        '''Should not import a notebook in the cwd.'''
+        # switch to resources so that notebook are in the cwd
+        path = os.getcwd()
+        os.chdir(self.root)        
+        try:
+            import test_injectable as mod
+        except ImportError as e:
+            pass
+        else:
+            self.assertTrue(False, 'expected ImportError')
+        finally:
+            os.chdir(path)
+            
 
 class TestNotebookLoader(unittest.TestCase):
     '''Tests for loading notebooks within the loader root directory.'''

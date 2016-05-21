@@ -238,15 +238,16 @@ class NotebookFinder(object):
         '''
         Find a notebook, given its fully qualified name and an optional path
         '''
-        # print '*** finding fullname:', fullname, 'path:', path
-        name = fullname.rsplit('.', 1)[-1]
-        path = [''] if path is None or not len(path) else path
-        fullpath = os.path.join(*path)
-
-        nb_path = os.path.join(fullpath, name + ".ipynb")
         loader = None
-        if os.path.isfile(nb_path):
-            loader = self.loader_cls(path, nb_path)
+        # print('*** finding fullname:', fullname, 'path:', path)
+        if fullname.startswith('mywb.'):
+            name = fullname.rsplit('.', 1)[-1]
+            path = [''] if path is None or not len(path) else path
+            fullpath = os.path.join(*path)
+
+            nb_path = os.path.join(fullpath, name + ".ipynb")
+            if os.path.isfile(nb_path):
+                loader = self.loader_cls(path, nb_path)
         return loader
 
 class NotebookPathFinder(object):
