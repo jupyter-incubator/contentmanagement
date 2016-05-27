@@ -5,15 +5,14 @@
 
 PYTHON?=python3
 
-REPO:=jupyter/pyspark-notebook:f3028232e94a
-DEV_REPO:=jupyter/pyspark-notebook-cms:f3028232e94a
+REPO:=jupyter/pyspark-notebook:8015c88c4b11
+DEV_REPO:=jupyter/pyspark-notebook-cms:8015c88c4b11
 PYTHON2_SETUP:=source activate python2
 
 define EXT_DEV_SETUP
 	pushd /src && \
 	pip install --no-deps -e . && \
-	jupyter cms install --user && \
-	jupyter cms activate && \
+	jupyter cms quick-setup --sys-prefix && \
 	popd
 endef
 
@@ -60,9 +59,8 @@ install:
 	@docker run -it --rm \
 		-v `pwd`:/src \
 		$(REPO) bash -c 'cd /src/dist && \
-			pip install --no-binary :all: $$(ls -1 *.tar.gz | tail -n 1) && \
-			jupyter cms install --user && \
-			jupyter cms activate && \
+			pip install $$(ls -1 *.tar.gz | tail -n 1) && \
+			jupyter cms quick-setup --sys-prefix && \
 			$(CMD)'
 
 sdist: ## Build a source distribution in dist/
