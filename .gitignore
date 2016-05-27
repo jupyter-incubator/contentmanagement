@@ -62,3 +62,4 @@ dist/
 __pycache__/
 etc/notebooks/*
 .DS_Store
+.ipynb_checkpoints/
