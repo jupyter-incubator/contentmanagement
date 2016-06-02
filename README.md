@@ -91,7 +91,7 @@ jupyter cms deactivate
 pip uninstall jupyter_cms
 ```
 
-## Writing Bundlers
+## Write Bundlers
 
 This extension supports the writing of *bundlers*, Python modules that may take a notebook, transform it (e.g,. using nbconvert), package the result, and either deploy it or download it. 
 
@@ -145,7 +145,7 @@ def bundle(handler, absolute_notebook_path):
   :param handler: The tornado.web.RequestHandler that serviced the request
   :param absolute_notebook_path: The path of the notebook on disk
   '''
-  handler.finish('Hello world!'')
+  handler.finish('Hello world!')
 ```
 
 The caller of the `bundle` function is a `@tornado.gen.coroutine` decorated function. It wraps its call to `bundle` with `torando.gen.maybe_future`. This behavior means `bundle` may be decorated with `@tornado.gen.coroutine`  and `yield` to avoid blocking the Notebook server main loop during long-running asynchronous operations like so:
@@ -167,17 +167,13 @@ The `handler` passed to bundler is a regular `tornado.web.RequestHandler` instan
 1. `notebook_dir` - The root notebook directory configured for the Jupyter Notebook server
 2. `tools` - An instance of [BundlerTools](https://github.com/jupyter-incubator/contentmanagement/blob/master/urth/cms/bundler.py#L15), a set of common convenience functions that may be useful to bundlers
 
-## Develop
+## Develop It
 
 This repository is setup for a Dockerized development environment.  These instructions assume the Docker client is running natively on the local host, and that it is configured to point to a Docker daemon running on a Linux virtual machine.
 
 ### Mac OS X
 
 Do this one-time setup if you do not have a local Docker environment yet.
-
-Download and install [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
-
-Download and install Docker.
 
 ```
 brew update
@@ -220,3 +216,7 @@ To see the Jupyter instance with extensions working:
 2. Visit http://THAT_IP:9500 in your browser
 
 See the Makefile for other dev, test, build commands as well as options for each command.
+
+## Other Notes
+
+* Importing notebooks as modules does work with ipyparallel, but not with its `sync_imports` context manager. See the [solution and explanation in issue #32](https://github.com/jupyter-incubator/contentmanagement/issues/32#issuecomment-222053318).
