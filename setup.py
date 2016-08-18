@@ -14,7 +14,7 @@ with open(os.path.join(HERE, 'jupyter_cms', '_version.py')) as f:
     exec(f.read(), {}, VERSION_NS)
 
 install_requires=[
-    'notebook>=4.0.0,<5.0',
+    'notebook>=4.0.0',
     'ipython>=4.1.0,<5.0',
     'whoosh>=2.7.0,<3.0',
 ]
