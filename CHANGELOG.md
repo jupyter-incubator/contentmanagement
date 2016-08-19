@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0 (2016-08-18)
+
+* Add license file to the package
+* Extend `load_notebook` to support injecting imported notebook variables into the local namepsace
+* Relax ipython requirements (>=4.1)
+* Fix bug where notebooks could be imported without the mywb prefix
+
 ## 0.5.0 (2016-04-18)
 
 * Make compatible with Jupyter Notebook 4.0.x through 4.2.x
