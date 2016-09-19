@@ -1,2 +1,2 @@
 recursive-include jupyter_cms/nbextension *.js *.css
-LICENSE.md
+include LICENSE.md
