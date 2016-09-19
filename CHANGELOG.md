@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.1 (2016-09-19)
+
+* *Really* add license file to the package
+
 ## 0.6.0 (2016-08-18)
 
 * Add license file to the package
