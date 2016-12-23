@@ -1,33 +1,17 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-.PHONY: build clean dev help install sdist test install
-
-PYTHON?=python3
-
-REPO:=jupyter/pyspark-notebook:8015c88c4b11
-DEV_REPO:=jupyter/pyspark-notebook-cms:8015c88c4b11
-PYTHON2_SETUP:=source activate python2
-
-define EXT_DEV_SETUP
-	pushd /src && \
-	pip install --no-deps -e . && \
-	jupyter cms quick-setup --sys-prefix && \
-	popd
-endef
+.PHONY: build clean dev help install sdist test
 
 help:
 # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-build: ## Build the dev Docker image
-	@-docker rm -f cms-build
-	@docker run -it --name cms-build \
-		$(REPO) bash -c 'pip install whoosh scandir; \
-			$(PYTHON2_SETUP); \
-			pip install whoosh scandir'
-	@docker commit cms-build $(DEV_REPO)
-	@-docker rm -f cms-build
+build: ## Build dev environments
+	@conda create -y -n cms-py3 python=3 notebook whoosh pandas scikit-learn matplotlib seaborn ipywidgets
+	@source activate cms-py3 && pip install -e . && jupyter cms quick-setup --sys-prefix
+	@conda create -y -n cms-py2 python=2 notebook whoosh scandir
+	@source activate cms-py2 && pip install -e . && jupyter cms quick-setup --sys-prefix
 
 clean: ## Clean source tree
 	@-rm -rf dist
@@ -35,55 +19,29 @@ clean: ## Clean source tree
 	@-rm -rf __pycache__ */__pycache__ */*/__pycache__
 	@-find . -name '*.pyc' -exec rm -fv {} \;
 
-dev: dev-$(PYTHON) ## Start notebook server in a container with source mounted
+nuke: clean ## Clean source tree and dev environments
+	-conda env remove -n cms-py3 -y
+	-conda env remove -n cms-py2 -y
 
-dev-python2: LANG_SETUP_CMD?=$(PYTHON2_SETUP) && python --version
+dev: dev-python3
+dev-python2: ENV=cms-py2
 dev-python2: _dev
-
-dev-python3: LANG_SETUP_CMD?=python --version
+dev-python3: ENV=cms-py3
 dev-python3: _dev
-
-_dev: CMD?=start-notebook.sh
-_dev: AUTORELOAD?=no
 _dev:
-	@docker run -it --rm \
-		--user jovyan \
-		-p 9500:8888 \
-		-e AUTORELOAD=$(AUTORELOAD) \
-		-v `pwd`:/src \
-		-v `pwd`/etc/notebooks:/home/jovyan/work \
-		$(DEV_REPO) bash -c '$(LANG_SETUP_CMD) && $(EXT_DEV_SETUP) && $(CMD)'
-
-install: CMD?=exit ## Install and activate the sdist package in the container
-install:
-	@docker run -it --rm \
-		-v `pwd`:/src \
-		$(REPO) bash -c 'cd /src/dist && \
-			pip install $$(ls -1 *.tar.gz | tail -n 1) && \
-			jupyter cms quick-setup --sys-prefix && \
-			$(CMD)'
+	source activate $(ENV) && jupyter notebook --notebook-dir=./etc/notebooks
 
 sdist: ## Build a source distribution in dist/
-	@docker run -it --rm \
-		-v `pwd`:/src \
-		$(REPO) bash -c 'cp -r /src /tmp/src && \
-			cd /tmp/src && \
-			python setup.py sdist $(POST_SDIST) && \
-			cp -r dist /src'
+	source activate $(ENV) && python setup.py sdist
 
-test: test-$(PYTHON) ## Run tests
-
-test-python2: SETUP_CMD?=$(PYTHON2_SETUP);
+test: test-python3 ## Run tests
+test-python2: ENV=cms-py2
 test-python2: _test
-
+test-python3: ENV=cms-py3
 test-python3: _test
-
-_test: CMD?=cd /src; python --version; python -B -m unittest discover -s test
 _test:
-# Need to use two commands here to allow for activation of multiple python versions
-	@docker run -it --rm \
-		-v `pwd`:/src \
-		$(DEV_REPO) bash -c '$(SETUP_CMD) $(CMD)'
+	source activate $(ENV) && python -B -m unittest discover -s test
 
-release: POST_SDIST=register upload
 release: sdist ## Package and release to PyPI
+	source activate $(ENV) && python setup.py sdist register upload
+
