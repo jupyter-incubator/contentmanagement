@@ -9,6 +9,7 @@ from jupyter_core.paths import jupyter_runtime_dir
 import os
 import json
 
+
 def _jupyter_bundler_paths():
     '''API for notebook bundler installation on notebook 4.2'''
     return [{
@@ -16,13 +17,15 @@ def _jupyter_bundler_paths():
             'label': 'IPython Notebook bundle (.zip)',
             'module_name': 'jupyter_cms.nb_bundler',
             'group': 'download'
-    }]
-        
+            }]
+
+
 def _jupyter_server_extension_paths():
     '''API for server extension installation on notebook 4.2'''
     return [{
         "module": "jupyter_cms"
     }]
+
 
 def _jupyter_nbextension_paths():
     '''API for JS extension installation on notebook 4.2'''
@@ -52,6 +55,7 @@ try:
 except ImportError:
     from scandir import scandir
 
+
 def load_ipython_extension(ipython):
     # use the configured working directory if we can find it
     work_dir = None
@@ -64,16 +68,18 @@ def load_ipython_extension(ipython):
     if work_dir is None:
         # fall back on an environment variable or ultimately the pwd
         work_dir = os.getenv('WORK', '.')
-    
+
     loader.enable(work_dir)
     ipython.push({'load_notebook': loader.load_notebook})
     ipython.register_magics(InjectMagic(ipython))
-    
+
+
 def unload_ipython_extension(ipython):
     ipython.drop_by_id({'load_notebook': loader.load_notebook})
     loader.disable()
     del ipython.magics_manager.magics['line']['inject']
     del ipython.magics_manager.registry['InjectMagic']
+
 
 def load_jupyter_server_extension(nb_app):
     '''
