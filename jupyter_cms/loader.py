@@ -7,7 +7,7 @@ import io, os, sys, types, re, warnings, hashlib
 import nbformat
 from nbformat import v4 as nb_v4
 from nbformat import reader, converter
-from nbconvert import export_html
+from nbconvert.exporters.html import HTMLExporter
 from traitlets.config import Config
 from IPython.display import display, HTML
 from IPython.core.interactiveshell import InteractiveShell
@@ -18,19 +18,22 @@ API_DOCSTRING_TMPL = 'Run {name}.help() for a detailed example.'
 MODULE_API_DOCSTRING_TMPL = 'Run help() for a detailed example.'
 MODULE_DOCSTRING_TMPL = 'Run this function to see rich help about this importable notebook.'
 
+export_html = HTMLExporter(config=Config({
+    'CSSHTMLHeaderPreprocessor': {
+        'enabled': False
+    },
+    'HTMLExporter': {
+        'template_file': 'basic'
+    }
+}))
+
+
 def rich_help():
     def _rich_help(*args):
         with warnings.catch_warnings():
             # ignore warnings about pandoc, nodejs, etc.
             warnings.filterwarnings('ignore', message='Node.js')
-            output, resources = export_html(_rich_help.__richdoc__, config=Config({
-                'CSSHTMLHeaderPreprocessor' : {
-                    'enabled' : False
-                },
-                'HTMLExporter' : {
-                    'template_file' : 'basic'
-                }
-            }))
+            output, resources = export_html.from_notebook_node(_rich_help.__richdoc__)
         # include style in every output; tried it global on import, but if the import is
         # re-run it's lost because there is no output on a repeat module import
         output = '''<style>
@@ -250,6 +253,7 @@ class NotebookFinder(object):
                 loader = self.loader_cls(path, nb_path)
         return loader
 
+
 class NotebookPathFinder(object):
     '''
     Treats the resources root folder and subdirectories as blank modules.
@@ -278,6 +282,7 @@ class NotebookPathFinder(object):
 
 _enabled = None
 
+
 def enable(root,
            notebook_path_loader_cls=BlankPackageLoader,
            notebook_loader_cls=NotebookLoader):
@@ -295,6 +300,7 @@ def enable(root,
     else:
         raise RuntimeError('loader already enabled')
 
+
 def disable():
     '''
     Removes notebook finders from the sys.meta_path.
@@ -306,6 +312,7 @@ def disable():
         _enabled = None
     else:
         raise RuntimeError('loader not enabled')
+
 
 def load_notebook(path, inject_locals={}):
     '''
