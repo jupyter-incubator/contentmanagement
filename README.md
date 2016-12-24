@@ -174,19 +174,30 @@ This repository is setup for a conda-based development environment.  These instr
 ```
 # clone this repo if you don't have it
 git clone https://github.com/jupyter-incubator/contentmanagement.git
-
-pushd contentmanagement
+cd contentmanagement
 
 # create `cms-py2` and `cms-py3` conda environments
 make build
 
-# run the python 2 test
-make test-python2
+# run unit tests
+make test         # py3
+make test-python2 # py2
 
-# run the notebook server out of the python 3 environment
-make dev
+# run a notebook server with the extension installed as editable
+make dev          # py3
+make dev-python2  # py2
 
-popd
+# build a source package
+make sdist
+
+# release the source package on pypi
+make release
+
+# remove built artifacts
+make clean
+
+# remove build artifacts and cms-py2, cms-py3 environments
+make nuke
 ```
 
 ## Other Notes
