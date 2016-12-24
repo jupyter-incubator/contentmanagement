@@ -169,53 +169,36 @@ The `handler` passed to bundler is a regular `tornado.web.RequestHandler` instan
 
 ## Develop It
 
-This repository is setup for a Dockerized development environment.  These instructions assume the Docker client is running natively on the local host, and that it is configured to point to a Docker daemon running on a Linux virtual machine.
-
-### Mac OS X
-
-Do this one-time setup if you do not have a local Docker environment yet.
+This repository is setup for a conda-based development environment.  These instructions assume that have you installed miniconda.
 
 ```
-brew update
-
-# make sure you're on Docker >= 1.7
-brew install docker-machine docker
-
-# create a VirtualBox virtual machine called 'dev' on local host, with Docker daemon installed
-docker-machine create -d virtualbox dev
-
-# point Docker client to virtual machine
-eval "$(docker-machine env dev)"
-```
-
-Clone this repository into a local directory that Docker can volume mount.
-
-```
-mkdir -p ~/projects/contentmanagement
-cd !$
+# clone this repo if you don't have it
 git clone https://github.com/jupyter-incubator/contentmanagement.git
-```
+cd contentmanagement
 
-Pull a base Docker image and build a subimage from it that includes [scandir](https://github.com/benhoyt/scandir) and [whoosh](http://whoosh.readthedocs.org/en/latest/) (runtime requirements usually installed by setuptools).
-
-```
+# create `cms-py2` and `cms-py3` conda environments
 make build
+
+# run unit tests
+make test         # py3
+make test-python2 # py2
+
+# run a notebook server with the extension installed as editable
+make dev          # py3
+make dev-python2  # py2
+
+# build a source package
+make sdist
+
+# release the source package on pypi
+make release
+
+# remove built artifacts
+make clean
+
+# remove build artifacts and cms-py2, cms-py3 environments
+make nuke
 ```
-
-Run the notebook server in a Docker container.
-
-```
-make dev
-```
-
-The final `make` command starts a Docker container on your VM with the critical pieces of the source tree mounted where they need to be to get picked up by the notebook server within the container.  Most code changes on your Mac host will have immediate effect within the container.
-
-To see the Jupyter instance with extensions working:
-
-1. Run `docker-machine ip dev` and note the IP of the dev machine.
-2. Visit http://THAT_IP:9500 in your browser
-
-See the Makefile for other dev, test, build commands as well as options for each command.
 
 ## Other Notes
 
