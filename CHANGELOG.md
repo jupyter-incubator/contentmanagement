@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.2 (2016-12-25)
+
+* Fix compatibility with nbconvert>=5.0
+* Switch to conda from docker for development
+
 ## 0.6.1 (2016-09-19)
 
 * *Really* add license file to the package
