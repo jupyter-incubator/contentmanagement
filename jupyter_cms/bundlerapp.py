@@ -6,9 +6,9 @@ import os
 try:
     from notebook.nbextensions import (BaseNBExtensionApp, _get_config_dir)
 except ImportError:
-    sys.exit("Aborted: {} requires notebook>=4.2".format(
+    sys.exit("Aborted: {} requires notebook>=4.2,<5.0".format(
         os.path.basename(sys.argv[0])))
-    
+
 from ._version import __version__
 
 from traitlets.config.manager import BaseJSONConfigManager
@@ -20,20 +20,20 @@ BUNDLER_SUBSECTION = "jupyter_cms_bundlers"
 
 def _get_bundler_metadata(module):
     """Gets the list of bundlers associated with a Python package.
-    
+
     Returns a tuple of (the module, [{
         'name': 'unique name of the bundler',
         'label': 'file menu item label for the bundler',
         'module_name': 'dotted package/module name containing the bundler',
         'group': 'download or deploy parent menu item'
     }])
-    
+
     Parameters
     ----------
 
     module : str
         Importable Python module exposing the
-        magic-named `_jupyter_bundler_paths` function    
+        magic-named `_jupyter_bundler_paths` function
     """
     m = import_item(module)
     if not hasattr(m, '_jupyter_bundler_paths'):
