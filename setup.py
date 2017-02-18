@@ -14,8 +14,9 @@ with open(os.path.join(HERE, 'jupyter_cms', '_version.py')) as f:
     exec(f.read(), {}, VERSION_NS)
 
 install_requires=[
-    'notebook>=4.0.0',
     'ipython>=4.1.0',
+    'nbconvert>=5.0.0',
+    'notebook>=4.0.0',
     'whoosh>=2.7.0,<3.0',
 ]
 
@@ -31,7 +32,7 @@ setup_args = dict(
     author='Jupyter Development Team',
     author_email='jupyter@googlegroups.com',
     description='Extension for Jupyter Notebook 4.0.x with experimental content management features',
-    long_description = '''
+    long_description='''
     This package adds the following features to Jupyter Notebook:
 
 * Search dialog on file tree, editor, and notebook screens to search over filenames and .ipynb content in the notebook directory

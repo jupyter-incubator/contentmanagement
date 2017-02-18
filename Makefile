@@ -11,9 +11,9 @@ activate: ## eval $(make activate)
 	@echo "source activate cms-py3"
 
 build: ## Build dev environments
-	@conda create -y -n cms-py3 python=3 notebook whoosh pandas scikit-learn matplotlib seaborn ipywidgets
+	@conda create -y -n cms-py3 python=3 pandas scikit-learn matplotlib seaborn ipywidgets
 	@source activate cms-py3 && pip install -e . && jupyter cms quick-setup --sys-prefix
-	@conda create -y -n cms-py2 python=2 notebook whoosh scandir
+	@conda create -y -n cms-py2 python=2
 	@source activate cms-py2 && pip install -e . && jupyter cms quick-setup --sys-prefix
 
 clean: ## Clean source tree
