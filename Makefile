@@ -7,6 +7,9 @@ help:
 # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
+activate: ## eval $(make activate)
+	@echo "source activate cms-py3"
+
 build: ## Build dev environments
 	@conda create -y -n cms-py3 python=3 notebook whoosh pandas scikit-learn matplotlib seaborn ipywidgets
 	@source activate cms-py3 && pip install -e . && jupyter cms quick-setup --sys-prefix
