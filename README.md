@@ -34,7 +34,6 @@ jupyter cms quick-setup --sys-prefix
 # jupyter serverextension enable --py jupyter_cms --sys-prefix
 # jupyter nbextension install --py jupyter_cms --sys-prefix
 # jupyter nbextension enable --py jupyter_cms --sys-prefix
-# jupyter bundler enable --py jupyter_cms --sys-prefix
 ```
 
 In Jupyter Notebook 4.1 and 4.0, you install and activate the extension like so:
@@ -60,7 +59,6 @@ In Jupyter Notebook >=4.2:
 # See jupyter cms quick-remove --help for other options (e.g., --user)
 jupyter cms quick-remove --sys-prefix
 # The above command is equivalent to this sequence of commands:
-# jupyter bundler disable --py jupyter_cms --sys-prefix
 # jupyter nbextension disable --py jupyter_cms --sys-prefix
 # jupyter nbextension uninstall --py jupyter_cms --sys-prefix
 # jupyter serverextension disable --py jupyter_cms --sys-prefix

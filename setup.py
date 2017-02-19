@@ -39,8 +39,6 @@ setup_args = dict(
 * IPython kernel extension to make notebooks importable, and notebook cells injectable via # <api> and # <help> annotations
 * Full-page drag-and-drop upload target
 * Pop-over table of contents navigation for notebooks
-* Plugin system for deploying and downloading notebook bundles
-* Example *IPython Notebook bundle (.zip)* download bundler
 
 See `the project README <https://github.com/jupyter-incubator/contentmanagement>`_
 for more information.
@@ -55,7 +53,6 @@ for more information.
     include_package_data=True,
     scripts=[
         'scripts/jupyter-cms',
-        'scripts/jupyter-bundler'
     ],
     install_requires=install_requires,
     classifiers=[
@@ -76,7 +73,6 @@ if 'setuptools' in sys.modules:
     setup_args['entry_points'] = {
         'console_scripts': [
             'jupyter-cms = jupyter_cms.extensionapp:main',
-            'jupyter-bundler = jupyter_cms.bundlerapp:main'
         ]
     }
     # Don't bother installing the .py scripts if if we're using entrypoints
