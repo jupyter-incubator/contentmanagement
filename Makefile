@@ -22,7 +22,8 @@ clean: ## Make a clean source tree
 build: env
 env: ## Make a dev environment
 	@conda create -y -n $(ENV) -c conda-forge python=3 \
-		notebook pandas scikit-learn matplotlib seaborn ipywidgets widgetsnbextension
+		--file requirements.txt \
+		--file requirements-demo.txt
 	@$(SA) $(ENV) && \
 		pip install -e . && \
 		jupyter cms quick-setup --sys-prefix

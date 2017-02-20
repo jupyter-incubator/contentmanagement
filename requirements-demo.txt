@@ -1,0 +1,6 @@
+ipywidgets
+matplotlib
+pandas
+scikit-learn
+seaborn
+widgetsnbextension
