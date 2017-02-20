@@ -20,7 +20,7 @@ except ImportError:
         BaseExtensionApp = BaseNBExtensionApp
         _new_extensions = True
     except ImportError:
-        BaseNBExtensionApp = object
+        BaseExtensionApp = object
         _new_extensions = False
 
 from traitlets import Unicode
@@ -35,6 +35,7 @@ INSTALL_ALIASES = {}
 INSTALL_ALIASES.update(aliases)
 del INSTALL_ALIASES['destination']
 
+
 def makedirs(path):
     '''
     mkdir -p and ignore existence errors compatible with Py2/3.
@@ -46,6 +47,7 @@ def makedirs(path):
             pass
         else:
             raise
+
 
 class ExtensionInstallApp(InstallNBExtensionApp):
     '''Subclass that installs this particular extension.'''
@@ -120,6 +122,7 @@ class ExtensionActivateApp(EnableNBExtensionApp):
 
         self.log.info("Done. You may need to restart the Jupyter notebook server for changes to take effect.")
 
+
 class ExtensionDeactivateApp(DisableNBExtensionApp):
     '''Subclass that deactivates this particular extension.'''
     name = u'jupyter-cms-extension-deactivate'
@@ -138,7 +141,7 @@ class ExtensionDeactivateApp(DisableNBExtensionApp):
     def disable_server_extension(self, extension):
         '''Disables the server side extension in the user config.'''
         server_cm = ConfigManager(config_dir=jupyter_config_dir())
-        
+
         makedirs(server_cm.config_dir)
 
         cfg = server_cm.get('jupyter_notebook_config')
@@ -171,6 +174,7 @@ class ExtensionDeactivateApp(DisableNBExtensionApp):
 
         self.log.info("Done. You may need to restart the Jupyter notebook server for changes to take effect.")
 
+
 class ExtensionQuickSetupApp(BaseExtensionApp):
     """Installs and enables all parts of this extension"""
     name = "jupyter cms quick-setup"
@@ -193,6 +197,7 @@ class ExtensionQuickSetupApp(BaseExtensionApp):
         enable = nbextensions.EnableNBExtensionApp()
         enable.initialize(self.argv)
         enable.start()
+
 
 class ExtensionQuickRemovalApp(BaseExtensionApp):
     """Disables and uninstalls all parts of this extension"""
@@ -271,6 +276,7 @@ class ExtensionApp(Application):
 
         # This starts subapps
         super(ExtensionApp, self).start()
+
 
 def main():
     ExtensionApp.launch_instance()
