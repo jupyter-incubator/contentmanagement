@@ -15,91 +15,91 @@ The content management extensions provide the following:
 
 ## Prerequisites
 
-* Jupyter Notebook >=4.0 running on Python 3.x or Python 2.7.x
+* Jupyter Notebook >=4.2 running on Python 3.x or Python 2.7.x
 * Edge, Chrome, Firefox, or Safari
 
-## Install It
+## Install and Enabling
 
-In Jupyter Notebook >=4.2, you can install and activate all features of the extension in two commands like so:
+The following steps install the extension package using `pip` and enable the
+extension in the active Python environment.
 
 ```bash
-# Install the python package
 pip install jupyter_cms
-
-# Install all parts of the extension to the active conda / venv / python env
-# and enable all parts of it in the jupyter profile in that environment
-# See jupyter cms quick-setup --help for other options (e.g., --user)
 jupyter cms quick-setup --sys-prefix
-# The above command is equivalent to this sequence of commands:
-# jupyter serverextension enable --py jupyter_cms --sys-prefix
-# jupyter nbextension install --py jupyter_cms --sys-prefix
-# jupyter nbextension enable --py jupyter_cms --sys-prefix
 ```
 
-In Jupyter Notebook 4.1 and 4.0, you install and activate the extension like so:
+Run `jupyter cms quick-setup --help` for other options. Note that the
+second command is a shortcut for the following:
 
 ```bash
-# Install the python package
-pip install jupyter_cms
-# Register the notebook frontend extensions into ~/.local/jupyter
-# See jupyter cms install --help for other options (e.g., --sys-prefix)
-jupyter cms install --user --symlink --overwrite
-# Enable the JS and server extensions in your ~/.jupyter
-jupyter cms activate
+jupyter serverextension enable --py jupyter_cms --sys-prefix
+jupyter nbextension install --py jupyter_cms --sys-prefix
+jupyter nbextension enable --py jupyter_cms --sys-prefix
 ```
 
-In either case, you will need to restart your notebook server if it was running during the enable/activate step. Also, note that you can run `jupyter --paths` to get a sense of where the extension files will be installed.
-
-## Uninstall It
-
-In Jupyter Notebook >=4.2:
+Altenratively, the followign command both installs and enables the package
+using `conda`.
 
 ```bash
-# Remove all parts of the extension from the active conda / venv / python env
-# See jupyter cms quick-remove --help for other options (e.g., --user)
+conda install jupyter_cms -c conda-forge
+```
+
+In either case, you will need to restart your notebook server if it was running
+during the enable/activate step.
+
+## Disabling and Uninstalling
+
+The following steps deactivate the extension in the active Python environment
+and uninstall the package using `pip`.
+
+```bash
 jupyter cms quick-remove --sys-prefix
-# The above command is equivalent to this sequence of commands:
-# jupyter nbextension disable --py jupyter_cms --sys-prefix
-# jupyter nbextension uninstall --py jupyter_cms --sys-prefix
-# jupyter serverextension disable --py jupyter_cms --sys-prefix
-
-# Remove the python package
 pip uninstall jupyter_cms
 ```
 
-In Jupyter Notebook 4.0 and 4.1:
+Note that the first command is a shortcut for the following:
 
 ```bash
-# Disable extensions, but no way to remove frontend assets in this version
-jupyter cms deactivate
+jupyter nbextension disable --py jupyter_cms --sys-prefix
+jupyter nbextension uninstall --py jupyter_cms --sys-prefix
+jupyter serverextension disable --py jupyter_cms --sys-prefix
+```
 
-# Remove the python package
-pip uninstall jupyter_cms
+The following command deactivates and uninstalls the package if it was
+installed using `conda`.
+
+```bash
+conda remove jupyter_cms
 ```
 
 ## Write Bundlers
 
-This extension used to support *bundlers*. That functionality has graduated and is available in Jupyter Notebook >=5.0. See [Custom bundler extensions](http://jupyter-notebook.readthedocs.io/en/latest/extending/bundler_extensions.html) in the documentation for more information.
+This extension used to support *bundlers*. That functionality has graduated and
+is available in Jupyter Notebook >=5.0. See [Custom bundler
+extensions](http://jupyter-notebook.readthedocs.io/en/latest/extending/bundler_extensions.html)
+in the documentation for more information.
+
+If you cannot upgrade to notebook>=5.0 and need bundler support, install a version of
+this extension prior to 0.7.0.
 
 ## Develop It
 
-This repository is setup for a conda-based development environment.  These instructions assume that have you installed miniconda.
+This repository is setup for a conda-based development environment.  These
+instructions assume that have you installed `conda`.
 
 ```
 # clone this repo if you don't have it
 git clone https://github.com/jupyter-incubator/contentmanagement.git
 cd contentmanagement
 
-# create `cms-py2` and `cms-py3` conda environments
-make build
+# create a `cms` conda environment
+make env
 
 # run unit tests
-make test         # py3
-make test-python2 # py2
+make test
 
-# run a notebook server with the extension installed as editable
-make dev          # py3
-make dev-python2  # py2
+# run a notebook server with the extension installed
+make notebook
 
 # build a source package
 make sdist
@@ -110,7 +110,7 @@ make release
 # remove built artifacts
 make clean
 
-# remove build artifacts and cms-py2, cms-py3 environments
+# remove build artifacts and cms environment
 make nuke
 ```
 
