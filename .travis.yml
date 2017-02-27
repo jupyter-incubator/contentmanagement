@@ -6,9 +6,11 @@ python:
     - 3.5
     - 3.6
 
-script:
+before_install:
     - pip install pip -U
     - pip install setuptools -U
+
+script:
     - pip install -e .
     - python -B -m unittest discover -s test
 
