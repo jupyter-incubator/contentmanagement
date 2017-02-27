@@ -18,7 +18,7 @@ The content management extensions provide the following:
 * Jupyter Notebook >=4.2 running on Python 3.x or Python 2.7.x
 * Edge, Chrome, Firefox, or Safari
 
-## Install and Enabling
+## Installing and Enabling
 
 The following steps install the extension package using `pip` and enable the
 extension in the active Python environment.
