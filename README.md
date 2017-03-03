@@ -37,7 +37,7 @@ jupyter nbextension install --py jupyter_cms --sys-prefix
 jupyter nbextension enable --py jupyter_cms --sys-prefix
 ```
 
-Altenratively, the followign command both installs and enables the package
+Alternatively, the following command both installs and enables the package
 using `conda`.
 
 ```bash

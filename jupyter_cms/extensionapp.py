@@ -184,8 +184,6 @@ class ExtensionQuickSetupApp(BaseExtensionApp):
     def start(self):
         self.argv.extend(['--py', 'jupyter_cms'])
 
-        print('install server')
-
         from notebook import serverextensions
         install = serverextensions.EnableServerExtensionApp()
         install.initialize(self.argv)
