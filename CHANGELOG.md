@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.0 (2017-04-04)
+
+* Update to support install against notebook>=5.0
+* Remove bundler API in favor of the one in notebook 5.0
+
 ## 0.6.2 (2016-12-25)
 
 * Fix compatibility with nbconvert>=5.0
