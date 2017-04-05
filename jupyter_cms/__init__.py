@@ -4,20 +4,9 @@ from .inject import InjectMagic
 from . import search
 from . import uploads
 from . import loader
-from . import bundler
 from jupyter_core.paths import jupyter_runtime_dir
 import os
 import json
-
-
-def _jupyter_bundler_paths():
-    '''API for notebook bundler installation on notebook 4.2'''
-    return [{
-            'name': 'notebook_associations_download',
-            'label': 'IPython Notebook bundle (.zip)',
-            'module_name': 'jupyter_cms.nb_bundler',
-            'group': 'download'
-            }]
 
 
 def _jupyter_server_extension_paths():
@@ -88,4 +77,3 @@ def load_jupyter_server_extension(nb_app):
     nb_app.log.info('Loaded jupyter_cms')
     search.load_jupyter_server_extension(nb_app)
     uploads.load_jupyter_server_extension(nb_app)
-    bundler.load_jupyter_server_extension(nb_app)

@@ -1,0 +1,4 @@
+ipython>=4.1.0
+nbconvert>=5.0.0
+notebook>=4.2.0
+whoosh>=2.7.0,<3.0

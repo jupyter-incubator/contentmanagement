@@ -4,15 +4,17 @@ python:
     - 3.3
     - 3.4
     - 3.5
+    - 3.6
+
+before_install:
+    - pip install pip -U
+    - pip install setuptools -U
+
 script:
-    - pip install "notebook>=4.0,<5.0"
-    - jupyter notebook --generate-config
-    - python setup.py sdist
-    - pip install --no-use-wheel dist/*.tar.gz
+    - pip install -e .
     - python -B -m unittest discover -s test
 
 notifications:
     email:
         on_success: change
         on_failure: always
-    slack: cloudet:rMfRKhvsbZuCIRZpTct3kBI4
